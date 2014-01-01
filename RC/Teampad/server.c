@@ -3,11 +3,16 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-char users[1000];
+typedef struct {
+	char name[5];
+	char clients;
+} Document;
+
+Document docs[1000];
 
 char * GenerateCode()
 {
-	char * code = malloc(sizeof(char)*8);
+	char * code = malloc(sizeof(char)*5);
 	char symbols[36];
 	int i = 0;
 	char c = '0';
@@ -18,40 +23,60 @@ char * GenerateCode()
 		symbols[i++] = c++;
 	srand(time(NULL));
 	code[0] = symbols[rand()%26+10];
-	for(i=1;i<8;i++)
+	for(i=1;i<5;i++)
 		code[i] = symbols[rand()%36];
 	return code;
 }
 
-int FindFile(char * name)
+void DownloadFile(int client, char * filename)
 {
-   return open(name,O_RDONLY);
+	printf("DownloadFile - neimplementat!\n"); 
 }
 
-void Check(int fd)
-	{
-		switch(users[fd])
+char * AvailableName()
+{
+	char * filename = GenerateCode();
+	int fd = open(filename,O_RDONLY);
+	while (fd > 2)
 		{
-			case 0:
-				printf("Nimeni.."); break;
-			case 1:
-				printf("Calaretu' singuratic..."); break;
-			case 2:
-				printf("Gasca-i toata!"); break;
-			default:
-				printf("Ceva nu-i bun...");
+			close(fd);
+			filename = GenerateCode();
+			fd = open(filename,O_RDONLY);
 		}
-	}
+	return filename;
+}
 
+int CreateFile()
+{
+	char * name = AvailableName();
+	int rfd = open(name,O_CREAT,O_RDWR);
+	strcpy(docs[rfd].name,name);
+	docs[rfd].clients = 1;
+	return rfd;
+}
+
+int EditFile(char * filename)
+{
+	int i;
+	for(i=2;i<1000;i++)
+		if(!strcmp(filename,docs[i].name))
+		{
+			if(docs[i].clients < 2)
+				docs[i].clients++;
+			else return -1;
+			return i;
+		}
+	i = open(filename,O_RDWR);
+	if (i>0)
+		return i;
+	else return -2;
+}
 
 int main()
 {
-	memset(users,0,1000);
+	memset(docs,0,1000);
+	char * x = AvailableName();
 	printf("Hello from server!\n");
-	
-	Check(FindFile("/etc/passwd"));
-	Check(7);
-	Check(FindFile("sdasdas"));
-	
+	printf("Editing %s: %d\n",x,EditFile(x));
 	return 0;
 }
