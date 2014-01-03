@@ -111,33 +111,32 @@ int main()
 	}
 }
 
-int DoJob(int fd)
+int DoJob(int descriptor)
 {
-  char buffer[100];		/* mesajul */
-  int bytes;			/* numarul de octeti cititi/scrisi */
-  char msg[100];		//mesajul primit de la client 
-  char msgrasp[100]=" ";        //mesaj de raspuns pentru client
+	char buffer[1024];
+	
+	if(read(descriptor, buffer, sizeof(buffer)) < 0)
+	{
+		perror ("[Server] read() through socket error!\n");
+		return 0;
+	}
 
-  bytes = read (fd, msg, sizeof (buffer));
-  if (bytes < 0)
-    {
-      perror ("Eroare la read() de la client.\n");
-      return 0;
-    }
-  printf ("[server]Mesajul a fost receptionat...%s\n", msg);
-      
-  /*pregatim mesajul de raspuns */
-  bzero(msgrasp,100);
-  strcat(msgrasp,"Hello ");
-  strcat(msgrasp,msg);
-      
-  printf("[server]Trimitem mesajul inapoi...%s\n",msgrasp);
-      
-  if (bytes && write (fd, msgrasp, bytes) < 0)
-    {
-      perror ("[server] Eroare la write() catre client.\n");
-      return 0;
-    }
-  
-  return bytes;
+	strcpy(buffer,"OK");
+	
+	if(write(descriptor, buffer, sizeof(buffer)) <= 0)
+	{
+		perror ("[Server] write() through socket error!\n");
+		return 0;
+	}
+	
+	if(read(descriptor, buffer, sizeof(buffer)) < 0)
+	{
+		perror ("[Server] read() through socket error!\n");
+		return 0;
+	}
+	
+	printf("%s\n",buffer);
+	
+	return 1;
 }
+
