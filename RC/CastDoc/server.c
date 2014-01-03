@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
 #define PORT 13012
 #define CLIENTS 20
@@ -111,15 +113,32 @@ int main()
 	}
 }
 
+int ConvertDocument(char * type, char * filename)
+{
+	char newName[10];
+	strcpy(newName,"numenou");
+	strcpy(filename,newName);
+	return 1;
+}
+
 int DoJob(int descriptor)
 {
 	char buffer[1024];
+	unsigned long fileSize;
+	int bytes;
+	char conversionType[128];
+	char fileName[10];
+	int file;
 	
 	if(read(descriptor, buffer, sizeof(buffer)) < 0)
 	{
 		perror ("[Server] read() through socket error!\n");
 		return 0;
 	}
+	
+	sscanf(buffer,"%s %lu",conversionType,&fileSize);
+	
+	printf("Conversion: %s\nSize: %lu\n",conversionType,fileSize);
 
 	strcpy(buffer,"OK");
 	
@@ -129,13 +148,27 @@ int DoJob(int descriptor)
 		return 0;
 	}
 	
-	if(read(descriptor, buffer, sizeof(buffer)) < 0)
+	if((file = open("test123",O_WRONLY|O_CREAT|O_TRUNC,S_IWUSR|S_IRUSR)) == -1)
 	{
-		perror ("[Server] read() through socket error!\n");
-		return 0;
+		printf("[Server] Can't create file!\n");
+		return 1;
 	}
 	
-	printf("%s\n",buffer);
+	bzero(buffer,1024);
+	do
+	{
+		if((bytes = read(descriptor,buffer,1024)) < 0)
+			break;
+		if(bytes != write(file,buffer,bytes))
+			break;
+		fileSize -= bytes;
+	} while(fileSize > 0);
+	close(file);
+	
+	if(fileSize > 0)
+		printf("[Server] File transfer from Client-%d failed!\n",descriptor);
+	else 
+		printf("[Server] File transfer from Client-%d is complete!\n", descriptor);
 	
 	return 1;
 }
