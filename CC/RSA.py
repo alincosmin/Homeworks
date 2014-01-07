@@ -1,5 +1,6 @@
 import sys
 import random
+import gmpy2
 
 def is_probable_prime(n):
     _mrpt_num_trials = 5
@@ -40,9 +41,9 @@ def gcd(a,b):
         a = t
     return a
 
-def get_pub(x):
+def get_pub(x,y):
     i = 2
-    while i < x:
+    while i < y:
         if gcd(i,x) == 1:
             return i
         i += 1
@@ -50,47 +51,56 @@ def get_pub(x):
 def get_big_prime():
     x = 4
     while not is_probable_prime(x):
-        x = random.getrandbits(128)
+        x = random.getrandbits(512)
     return x
 
-def inverse(a, n):
-    t = 0
-    newt = 1
-    r = n
-    newr = a
-    while newr != 0:
-        quotient = r/newr
-        (t, newt) = (newt, t - quotient * newt)
-        (r, newr) = (newr, r - quotient * newr)
-    if r > 1:
-        return "a is not invertible"
-    if t < 0:
-        t = t + n
-    return t
+def inverse(a,b):
+    origA = a
+    X = 0
+    prevX = 1
+    Y = 1
+    prevY = 0
+    while b != 0:
+        temp = b
+        quotient = a/b
+        b = a%b
+        a = temp
+        temp = X
+        a = prevX - quotient * X
+        prevX = temp
+        temp = Y
+        Y = prevY - quotient * Y
+        prevY = temp
+
+    return origA + prevY
+
+def encrypt(message, modulo, public=65537):
+    aux = message.encode('hex')
+    return pow(int(aux,16),public,modulo)
+
+def decrypt(cipher, p, q, public=65537):
+    private = gmpy2.invert(public,(p-1)*(q-1))
+    dp = private % (p-1)
+    dq = private % (q-1)
+    qinv = gmpy2.invert(q,p)
+
+    dec1 = pow(cipher,dp,p)
+    dec2 = pow(cipher,dq,q)
+    h = (qinv *(dec1-dec2)) % p
+    decoded = hex(dec2 + h*q)
+    return decoded[2:].decode('hex')
+
 
 if __name__ == "__main__":
     print "Started...\n"
 
-    p,q,n,t,e,d = 0,0,0,0,0,0
     p = get_big_prime()
     q = get_big_prime()
-    """
-    p = 160346447632798703581393784108820773322045169743194904454907780390081360266755852879682718179988946314987671092742738819923324343379897011668985971637874112576479418801430535352468318222095962683527502509189813336112393548040189818281599348732338177949551741150011042091345699583357587653952274908352463659871
-    q = 164153838291655929433542331561453106119468352174674935375022573517847487402355653643440314038520209461610902776082781883085247249512771575694136671623928001011189596702191111187120987866982521638958298649558268047578458558527250441653586275213188664835150198560887119006119307673857123638864895871188513496629
-    """
 
-    n = p*q
-    t = (p-1)*(q-1)
-    e = get_pub(t)
-    d = inverse(e,n)
-
-    print "p = " + str(p)
-    print "q = " + str(q)
-
-    print "p: " + str(is_probable_prime(p))
-    print "q: " + str(is_probable_prime(q))
-
-    print "n: " + str(n)
-    print "t: " + str(t)
-    print "e: " + str(e)
-    print "d: " + str(d)
+    target = "Abracadabra"
+    print target
+    e = 17
+    x = encrypt(target,p*q,e)
+    print x
+    y = decrypt(x,p,q,e)
+    print y
