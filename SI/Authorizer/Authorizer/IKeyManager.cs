@@ -2,6 +2,7 @@
 {
     public interface IKeyManager
     {
-        bool GetKeyForService(string serviceName, out string key);
+        string GetInitialKey(string identity);
+        bool GetKeyForService(string identity, out string response);
     }
 }
