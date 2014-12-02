@@ -3,6 +3,7 @@
     public interface IPrivateService
     {
         bool InitialConnection(string message);
-        string Name { get; set; }
+        string Name { get; }
+        void ProcessMessage(string message);
     }
 }

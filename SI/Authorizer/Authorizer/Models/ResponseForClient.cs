@@ -6,7 +6,7 @@ namespace Authorizer.Models
     {
         public string Key { get; set; }
         public string SessionKey { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public TimeSpan SessionLifeSpan { get; set; }
         public string ServiceName { get; set; }
     }
 }

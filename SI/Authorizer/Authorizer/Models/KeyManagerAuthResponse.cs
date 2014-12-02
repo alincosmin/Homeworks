@@ -1,4 +1,6 @@
-﻿namespace Authorizer.Models
+﻿using System.Web.Script.Serialization;
+
+namespace Authorizer.Models
 {
     public class KeyManagerAuthResponse
     {

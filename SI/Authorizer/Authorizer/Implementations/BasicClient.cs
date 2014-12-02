@@ -1,10 +1,8 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Web.Script.Serialization;
 using Authorizer.Interfaces;
 using Authorizer.Models;
+using Newtonsoft.Json;
 
 namespace Authorizer.Implementations
 {
@@ -25,8 +23,6 @@ namespace Authorizer.Implementations
 
         public bool GetKeyForService(IPrivateService service)
         {
-            var json = new JavaScriptSerializer();
-
             var rand = new Random().Next(100000, 999999);
 
             var request = new ClientRequest()
@@ -36,17 +32,16 @@ namespace Authorizer.Implementations
                 SessionKey = rand.ToString()
             };
 
-            var message = json.Serialize(request);
+            var message = JsonConvert.SerializeObject(request);
             string responseMessage;
 
             if (KeyManager.GetKeyForService(message, out responseMessage))
             {
-                var response = new JavaScriptSerializer().Deserialize<KeyManagerAuthResponse>(responseMessage);
+                var response = JsonConvert.DeserializeObject<KeyManagerAuthResponse>(responseMessage);
 
                 if (response == null) return false;
-                
-                var clientMessage = json.Deserialize<ResponseForClient>(response.ClientMessage);
-                
+
+                var clientMessage = JsonConvert.DeserializeObject<ResponseForClient>(response.ClientMessage);
 
                 Keys.Add(service, clientMessage.Key);
                 service.InitialConnection(response.ServiceMessage);
@@ -58,7 +53,7 @@ namespace Authorizer.Implementations
 
         public bool SendMessageToService(IPrivateService service, string message)
         {
-            Console.WriteLine("Sending message \"{0}\" to service {1}", message, service.Name);            
+            service.ProcessMessage(message);
             return true;
         }
     }
