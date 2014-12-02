@@ -46,6 +46,7 @@
     <Compile Include="Implementations\BasicClient.cs" />
     <Compile Include="Implementations\BasicKeyManager.cs" />
     <Compile Include="Implementations\BasicService.cs" />
+    <Compile Include="Implementations\TripleDESWrapper.cs" />
     <Compile Include="Models\ClientRequest.cs" />
     <Compile Include="Interfaces\IClient.cs" />
     <Compile Include="Interfaces\IKeyManager.cs" />

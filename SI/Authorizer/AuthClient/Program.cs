@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Threading;
 using Authorizer.Implementations;
 
@@ -15,7 +17,7 @@ namespace AuthClient
             };
 
             var client = new BasicClient("ClientSimplu", keyManager);
-            var service = new BasicService {Name = "ServSimplu"};
+            var service = new BasicService("ServSimplu", keyManager);
             Thread.Sleep(2000);
             client.GetKeyForService(service);
             client.SendMessageToService(service, "mare mesaj");
