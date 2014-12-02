@@ -1,6 +1,4 @@
-﻿using System.Security.Policy;
-
-namespace Authorizer
+﻿namespace Authorizer.Models
 {
     public class ClientRequest
     {

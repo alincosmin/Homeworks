@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Authorizer
+namespace Authorizer.Models
 {
     public class ResponseForClient
     {

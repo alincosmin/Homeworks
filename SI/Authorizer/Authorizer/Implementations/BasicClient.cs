@@ -1,14 +1,18 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web.Script.Serialization;
+using Authorizer.Interfaces;
+using Authorizer.Models;
 
-namespace Authorizer
+namespace Authorizer.Implementations
 {
     public class BasicClient : IClient
     {
         private IKeyManager KeyManager { get; set; }
         private string ManagerKey { get; set; }
-        private IDictionary<string, string> Keys { get; set; }
+        private IDictionary<IPrivateService, string> Keys { get; set; }
         public string Identity { get; private set; }
 
         public BasicClient(string identity, IKeyManager keyManager)
@@ -16,10 +20,10 @@ namespace Authorizer
             Identity = identity;
             KeyManager = keyManager;
             ManagerKey = keyManager.GetInitialKey(Identity);
-            Keys = new Dictionary<string, string>();
+            Keys = new Dictionary<IPrivateService, string>();
         }
 
-        public bool GetKeyForService(string serviceName, IPrivateService service)
+        public bool GetKeyForService(IPrivateService service)
         {
             var json = new JavaScriptSerializer();
 
@@ -28,19 +32,23 @@ namespace Authorizer
             var request = new ClientRequest()
             {
                 ClientIdentity = Identity,
-                ServiceName = serviceName,
+                ServiceName = service.Name,
                 SessionKey = rand.ToString()
             };
 
             var message = json.Serialize(request);
             string responseMessage;
-            KeyManagerAuthResponse response;
 
             if (KeyManager.GetKeyForService(message, out responseMessage))
             {
-                response = new JavaScriptSerializer().Deserialize<KeyManagerAuthResponse>(responseMessage);
+                var response = new JavaScriptSerializer().Deserialize<KeyManagerAuthResponse>(responseMessage);
+
+                if (response == null) return false;
+                
                 var clientMessage = json.Deserialize<ResponseForClient>(response.ClientMessage);
-                Keys.Add(clientMessage.ServiceName, clientMessage.Key);
+                
+
+                Keys.Add(service, clientMessage.Key);
                 service.InitialConnection(response.ServiceMessage);
                 return true;    
             }
@@ -48,10 +56,9 @@ namespace Authorizer
             return false;    
         }
 
-        public bool SendMessageToService(string serviceName)
+        public bool SendMessageToService(IPrivateService service, string message)
         {
-            if (!Keys.ContainsKey(serviceName)) return false;
-
+            Console.WriteLine("Sending message \"{0}\" to service {1}", message, service.Name);            
             return true;
         }
     }

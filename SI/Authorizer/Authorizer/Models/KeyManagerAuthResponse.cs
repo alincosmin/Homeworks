@@ -1,4 +1,4 @@
-﻿namespace Authorizer
+﻿namespace Authorizer.Models
 {
     public class KeyManagerAuthResponse
     {
