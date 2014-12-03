@@ -52,6 +52,7 @@
     <Compile Include="Interfaces\IKeyManager.cs" />
     <Compile Include="Interfaces\IPrivateService.cs" />
     <Compile Include="Models\KeyManagerAuthResponse.cs" />
+    <Compile Include="Models\LifeSpanKeyPair.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ResponseForClient.cs" />

@@ -11,14 +11,14 @@ namespace Authorizer.Implementations
     {
         private IKeyManager KeyManager { get; set; }
         private readonly byte[] _managerKey;
-        private IDictionary<IPrivateService, byte[]> Keys { get; set; }
+        private Dictionary<IPrivateService, LifeSpanKeyPair> Keys { get; set; }
         public string Identity { get; private set; }
 
         public BasicClient(string identity, IKeyManager keyManager)
         {
             Identity = identity;
             KeyManager = keyManager;
-            Keys = new Dictionary<IPrivateService, byte[]>();
+            Keys = new Dictionary<IPrivateService, LifeSpanKeyPair>();
             _managerKey = keyManager.Greet(this);
         }
 
@@ -48,10 +48,16 @@ namespace Authorizer.Implementations
 
                 if(!clientMessage.SessionKey.Equals(rand)) return false;
 
-                Keys.Add(service, clientMessage.Key);
+                var expirationDate = DateTime.Now.Add(clientMessage.SessionLifeSpan);
+                var pair = new LifeSpanKeyPair()
+                {
+                    ExpirationDate = expirationDate,
+                    Key = clientMessage.Key
+                };
 
-                service.InitialConnection(response.ServiceMessage);
-                return true;    
+                Keys.Add(service, pair);
+
+                return service.InitialConnection(response.ServiceMessage, this);    
             }
 
             return false;    
@@ -59,7 +65,15 @@ namespace Authorizer.Implementations
 
         public bool SendMessageToService(IPrivateService service, string message)
         {
-            service.ProcessMessage(message);
+            if (!Keys.ContainsKey(service)) GetKeyForService(service);
+
+            if(Keys[service].ExpirationDate.CompareTo(DateTime.Now) < 0) return false;
+
+            var encryptedMessage = TripleDESWrapper.Encrypt(message, Keys[service].Key);
+
+            Console.WriteLine("Client: Sent [{0}] as [{1}]", message, encryptedMessage);
+
+            service.ProcessMessage(encryptedMessage, this);
             return true;
         }
     }

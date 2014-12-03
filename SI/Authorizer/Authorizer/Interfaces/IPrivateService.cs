@@ -1,9 +1,11 @@
-﻿namespace Authorizer.Interfaces
+﻿using Authorizer.Implementations;
+
+namespace Authorizer.Interfaces
 {
     public interface IPrivateService
     {
-        bool InitialConnection(string message);
+        bool InitialConnection(string message, IClient client);
         string Name { get; }
-        void ProcessMessage(string message);
+        bool ProcessMessage(string message, IClient client);
     }
 }
