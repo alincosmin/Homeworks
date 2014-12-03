@@ -14,12 +14,12 @@ namespace Authorizer.Implementations
 
         private readonly IDictionary<IClient, byte[]> _clientKeys = new Dictionary<IClient, byte[]>();
         private readonly IDictionary<IPrivateService, byte[]> _serviceKeys = new Dictionary<IPrivateService, byte[]>();
+        private readonly Random _randomGenerator = new Random();
 
         public byte[] Greet(object obj)
         {
-            var rnd = new Random();
             var key = new byte[24];
-            rnd.NextBytes(key);
+            _randomGenerator.NextBytes(key);
 
             if (obj is IClient)
             {
@@ -39,18 +39,11 @@ namespace Authorizer.Implementations
         {
             response = "";
             var request = JsonConvert.DeserializeObject<ClientRequest>(message);
-
-            var clientDes = new TripleDESCryptoServiceProvider();
-            clientDes.Key = _clientKeys[basicClient];
-            var clientCrypto = new TripleDESWrapper(clientDes);
-
-            var serviceDes = new TripleDESCryptoServiceProvider();
-            serviceDes.Key = _serviceKeys.FirstOrDefault(x => x.Key.Name.Equals(request.ServiceName)).Value;
-            var serviceCrypto = new TripleDESWrapper(clientDes);
-
-            var rnd = new Random();
+            var clientKey = _clientKeys[basicClient];
+            var serviceKey = _serviceKeys.FirstOrDefault(x => x.Key.Name.Equals(request.ServiceName)).Value;
+            
             var key = new byte[16];
-            rnd.NextBytes(key);
+            _randomGenerator.NextBytes(key);
 
             var clientResponse = new ResponseForClient
             {
@@ -69,8 +62,8 @@ namespace Authorizer.Implementations
 
             var pair = new KeyManagerAuthResponse
             {
-                ClientMessage = clientCrypto.Encrypt(JsonConvert.SerializeObject(clientResponse)),
-                ServiceMessage = serviceCrypto.Encrypt(JsonConvert.SerializeObject(serviceResponse)),
+                ClientMessage = TripleDESWrapper.Encrypt(JsonConvert.SerializeObject(clientResponse), clientKey),
+                ServiceMessage = TripleDESWrapper.Encrypt(JsonConvert.SerializeObject(serviceResponse), serviceKey),
             };
 
             response = JsonConvert.SerializeObject(pair);

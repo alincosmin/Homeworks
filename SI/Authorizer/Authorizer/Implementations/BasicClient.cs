@@ -33,10 +33,6 @@ namespace Authorizer.Implementations
                 SessionKey = rand
             };
 
-            var des = new TripleDESCryptoServiceProvider();
-            des.Key = _managerKey;
-            var crypto = new TripleDESWrapper(des);
-
             var message = JsonConvert.SerializeObject(request);
 
             string responseMessage;
@@ -47,7 +43,7 @@ namespace Authorizer.Implementations
 
                 if (response == null) return false;
 
-                var decryptMessage = crypto.Decrypt(response.ClientMessage);
+                var decryptMessage = TripleDESWrapper.Decrypt(response.ClientMessage, _managerKey);
                 var clientMessage = JsonConvert.DeserializeObject<ResponseForClient>(decryptMessage);
 
                 if(!clientMessage.SessionKey.Equals(rand)) return false;

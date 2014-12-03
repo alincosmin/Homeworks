@@ -2,71 +2,51 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json.Serialization;
 
 namespace Authorizer.Implementations
 {
-    public class TripleDESWrapper
+    public static class TripleDESWrapper
     {
-        private readonly TripleDESCryptoServiceProvider _alg;
+        private static readonly TripleDESCryptoServiceProvider _alg = new TripleDESCryptoServiceProvider();
 
-        public TripleDESWrapper(TripleDESCryptoServiceProvider des)
+        private static byte[] IV = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+
+        public static string Encrypt(string data, byte[] key)
         {
-            _alg = des;
+            var mStream = new MemoryStream();
+            var cStream = new CryptoStream(mStream,
+                new TripleDESCryptoServiceProvider().CreateEncryptor(key, IV),
+                CryptoStreamMode.Write);
+
+            byte[] toEncrypt = new ASCIIEncoding().GetBytes(data);
+
+            cStream.Write(toEncrypt, 0, toEncrypt.Length);
+            cStream.FlushFinalBlock();
+
+            var ret = mStream.ToArray();
+
+            cStream.Close();
+            mStream.Close();
+
+            return Convert.ToBase64String(ret);
         }
 
-        public string Encrypt(string data)
+        public static string Decrypt(string encodedData, byte[] key)
         {
-            var key = _alg.Key;
-            var IV = _alg.IV;
+            var data = Convert.FromBase64String(encodedData);
 
-            try
-            {
-                var mStream = new MemoryStream();
-                var cStream = new CryptoStream(mStream,
-                    new TripleDESCryptoServiceProvider().CreateEncryptor(key, IV),
-                    CryptoStreamMode.Write);
+            var msDecrypt = new MemoryStream(data);
+            var csDecrypt = new CryptoStream(msDecrypt,
+                new TripleDESCryptoServiceProvider().CreateDecryptor(key, IV),
+                CryptoStreamMode.Read);
+            var fromEncrypt = new byte[data.Length];
+            csDecrypt.Read(fromEncrypt, 0, fromEncrypt.Length);
 
-                byte[] toEncrypt = new UTF8Encoding().GetBytes(data);
+            msDecrypt.Close();
+            csDecrypt.Close();
+            return new ASCIIEncoding().GetString(fromEncrypt);
 
-                cStream.Write(toEncrypt, 0, toEncrypt.Length);
-                cStream.FlushFinalBlock();
-
-                var ret = mStream.ToArray();
-
-                cStream.Close();
-                mStream.Close();
-
-                return new UTF8Encoding().GetString(ret);
-            }
-
-            catch (CryptographicException e)
-            {
-                Console.WriteLine("A Cryptographic error occurred: {0}", e.Message);
-                return null;
-            }
-        }
-
-        public string Decrypt(string encodedData)
-        {
-            var key = _alg.Key;
-            var IV = _alg.IV;
-            var data = new UTF8Encoding().GetBytes(encodedData);
-
-            try
-            {
-                var msDecrypt = new MemoryStream(data);
-                var csDecrypt = new CryptoStream(msDecrypt,
-                    new TripleDESCryptoServiceProvider().CreateDecryptor(key, IV),
-                    CryptoStreamMode.Read);
-                var fromEncrypt = new byte[data.Length];
-                csDecrypt.Read(fromEncrypt, 0, fromEncrypt.Length);
-                return new UTF8Encoding().GetString(fromEncrypt);
-            }
-            catch (CryptographicException e)
-            {
-                Console.WriteLine("A Cryptographic error occurred: {0}", e.Message);
-                return null;
-            }
         }
     }
 }

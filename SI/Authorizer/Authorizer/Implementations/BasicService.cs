@@ -19,13 +19,8 @@ namespace Authorizer.Implementations
 
         public bool InitialConnection(string message)
         {
-            var des = new TripleDESCryptoServiceProvider();
-            des.Key = _managerKey;
-            var crypto = new TripleDESWrapper(des);
-
-            var decryptRequest = crypto.Decrypt(message);
+            var decryptRequest = TripleDESWrapper.Decrypt(message, _managerKey);
             var request = JsonConvert.DeserializeObject<ResponseForService>(decryptRequest);
-
             return true;
         }
 
