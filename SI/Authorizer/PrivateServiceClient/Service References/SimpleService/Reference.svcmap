@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="01c493dd-23a7-4723-80cf-8a9b5bc9993a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:86/SimpleService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="SimpleService2.xsd" MetadataType="Schema" ID="55409eb9-5ce5-483e-83e3-f43488a355e0" SourceId="1" SourceUrl="http://localhost:86/SimpleService.svc?xsd=xsd2" />
+    <MetadataFile FileName="SimpleService.xsd" MetadataType="Schema" ID="95c4bc1b-56e6-4221-b0a8-f6c24fb45c94" SourceId="1" SourceUrl="http://localhost:86/SimpleService.svc?xsd=xsd1" />
+    <MetadataFile FileName="SimpleService1.xsd" MetadataType="Schema" ID="f93d4ca9-de9e-41ca-b351-2ea5362de257" SourceId="1" SourceUrl="http://localhost:86/SimpleService.svc?xsd=xsd0" />
+    <MetadataFile FileName="SimpleService.wsdl" MetadataType="Wsdl" ID="3f9b9204-0f0f-440b-9da7-8598cebb2275" SourceId="1" SourceUrl="http://localhost:86/SimpleService.svc?wsdl" />
+    <MetadataFile FileName="SimpleService.disco" MetadataType="Disco" ID="1aa938a5-ba76-4083-a739-bd7088125839" SourceId="1" SourceUrl="http://localhost:86/SimpleService.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

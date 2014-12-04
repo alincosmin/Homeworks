@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c9159d45-98bf-460e-a476-9db6dc7cb091" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:86/ServiceManager.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ServiceManager.xsd" MetadataType="Schema" ID="df78b451-4cc3-4e5a-91f5-c920bbb87967" SourceId="1" SourceUrl="http://localhost:86/ServiceManager.svc?xsd=xsd2" />
+    <MetadataFile FileName="ServiceManager1.xsd" MetadataType="Schema" ID="1ed55e82-d4a0-4818-b50f-32f53499d3f3" SourceId="1" SourceUrl="http://localhost:86/ServiceManager.svc?xsd=xsd0" />
+    <MetadataFile FileName="ServiceManager.disco" MetadataType="Disco" ID="7b1eaa55-eae5-4403-a3cf-061b61bbdf5d" SourceId="1" SourceUrl="http://localhost:86/ServiceManager.svc?disco" />
+    <MetadataFile FileName="ServiceManager2.xsd" MetadataType="Schema" ID="929a4529-a6e5-4f13-ba2d-4d15504eeb5c" SourceId="1" SourceUrl="http://localhost:86/ServiceManager.svc?xsd=xsd1" />
+    <MetadataFile FileName="ServiceManager.wsdl" MetadataType="Wsdl" ID="1347fbc1-bc4b-4c49-98ba-d084a8c0c177" SourceId="1" SourceUrl="http://localhost:86/ServiceManager.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
