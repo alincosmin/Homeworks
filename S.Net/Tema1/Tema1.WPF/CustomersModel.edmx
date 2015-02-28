@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CustomersModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="CustomersModelStoreContainer">
+    <EntitySet Name="CustomerTypes" EntityType="CustomersModel.Store.CustomerTypes" store:Type="Tables" Schema="CustomerManager" />
+    <EntitySet Name="Customers" EntityType="CustomersModel.Store.Customers" store:Type="Tables" Schema="CustomerManager" />
+    <EntitySet Name="CustomerEmails" EntityType="CustomersModel.Store.CustomerEmails" store:Type="Tables" Schema="CustomerManager" />
+    <AssociationSet Name="CustomerTypeCustomer" Association="CustomersModel.Store.CustomerTypeCustomer">
+      <End Role="CustomerType" EntitySet="CustomerTypes" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerCustomerEmail" Association="CustomersModel.Store.CustomerCustomerEmail">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="CustomerEmail" EntitySet="CustomerEmails" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="CustomerTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CustomerType_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CustomerEmails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Customer_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="CustomerTypeCustomer">
+    <End Role="CustomerType" Type="CustomersModel.Store.CustomerTypes" Multiplicity="1" />
+    <End Role="Customer" Type="CustomersModel.Store.Customers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="CustomerType_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CustomerCustomerEmail">
+    <End Role="Customer" Type="CustomersModel.Store.Customers" Multiplicity="1" />
+    <End Role="CustomerEmail" Type="CustomersModel.Store.CustomerEmails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerEmail">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="CustomersModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="CustomersModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CustomerTypes" EntityType="CustomersModel.CustomerType" />
+          <EntitySet Name="Customers" EntityType="CustomersModel.Customer" />
+          <EntitySet Name="CustomerEmails" EntityType="CustomersModel.CustomerEmail" />
+          <AssociationSet Name="CustomerTypeCustomer" Association="CustomersModel.CustomerTypeCustomer">
+            <End Role="CustomerType" EntitySet="CustomerTypes" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="CustomerCustomerEmail" Association="CustomersModel.CustomerCustomerEmail">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CustomerEmail" EntitySet="CustomerEmails" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="CustomerType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="CustomersModel.CustomerTypeCustomer" FromRole="CustomerType" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="CustomerType" Relationship="CustomersModel.CustomerTypeCustomer" FromRole="Customer" ToRole="CustomerType" />
+          <NavigationProperty Name="CustomerEmails" Relationship="CustomersModel.CustomerCustomerEmail" FromRole="Customer" ToRole="CustomerEmail" />
+        </EntityType>
+        <EntityType Name="CustomerEmail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="CustomersModel.CustomerCustomerEmail" FromRole="CustomerEmail" ToRole="Customer" />
+        </EntityType>
+        <Association Name="CustomerTypeCustomer">
+          <End Type="CustomersModel.CustomerType" Role="CustomerType" Multiplicity="1" />
+          <End Type="CustomersModel.Customer" Role="Customer" Multiplicity="*" />
+        </Association>
+        <Association Name="CustomerCustomerEmail">
+          <End Type="CustomersModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="CustomersModel.CustomerEmail" Role="CustomerEmail" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CustomersModelStoreContainer" CdmEntityContainer="CustomersModelContainer">
+    <EntitySetMapping Name="CustomerTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(CustomersModel.CustomerType)">
+        <MappingFragment StoreEntitySet="CustomerTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(CustomersModel.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomerEmails">
+      <EntityTypeMapping TypeName="IsTypeOf(CustomersModel.CustomerEmail)">
+        <MappingFragment StoreEntitySet="CustomerEmails">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="CustomerTypeCustomer" TypeName="CustomersModel.CustomerTypeCustomer" StoreEntitySet="Customers">
+      <EndProperty Name="CustomerType">
+        <ScalarProperty Name="Id" ColumnName="CustomerType_Id" />
+      </EndProperty>
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CustomerCustomerEmail" TypeName="CustomersModel.CustomerCustomerEmail" StoreEntitySet="CustomerEmails">
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Customer_Id" />
+      </EndProperty>
+      <EndProperty Name="CustomerEmail">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="DefaultDatabaseSchema" Value="CustomerManager" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

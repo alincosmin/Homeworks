@@ -7,11 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Tema1
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class Product
     {
         public Product()

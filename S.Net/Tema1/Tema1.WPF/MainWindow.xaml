@@ -1,0 +1,29 @@
+﻿<Window x:Class="Tema1.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Height="299" Margin="10,10,0,0" VerticalAlignment="Top" Width="497">
+            <TabItem Header="Customers" Height="22" VerticalAlignment="Bottom">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="27*"/>
+                        <ColumnDefinition Width="464*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="customerEntity" HorizontalAlignment="Left" Margin="39,10,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.393,-0.718" Grid.Column="1" SelectionChanged="customerEntity_SelectionChanged">
+                        <ComboBoxItem Content="Customer Type" HorizontalAlignment="Left" Width="118"/>
+                        <ComboBoxItem Content="Customer" HorizontalAlignment="Left" Width="118"/>
+                        <ComboBoxItem Content="Customer Email" HorizontalAlignment="Left" Width="118"/>
+                    </ComboBox>
+                    <ListBox x:Name="entitiesBox" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="208" Margin="10,51,0,0" VerticalAlignment="Top" Width="176">
+                    </ListBox>
+                    <Label Content="Entity" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Producs">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

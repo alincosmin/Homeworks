@@ -69,6 +69,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CustomersModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="CustomersService.cs" />
     <Compile Include="CustomerType.cs">
       <DependentUpon>CustomersModel.tt</DependentUpon>
     </Compile>

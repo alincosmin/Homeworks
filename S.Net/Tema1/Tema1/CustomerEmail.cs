@@ -9,9 +9,6 @@
 
 namespace Tema1
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class CustomerEmail
     {
         public int Id { get; set; }
