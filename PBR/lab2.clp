@@ -65,17 +65,16 @@
 	(optiune 4)
 	=>
 	(printout t "Artistul cautat: ")
-	(assert (term (read)))
+	(assert (search (read)))
 )
 
 (defrule listSongsByName
 	(optiune 3)
 	(search ?term)
 	(piesa (nume ?name) (artist ?art))
+	(test (str-index ?term ?name))
 	=>
 	(printout t "Nume: " ?name " Artist: " ?art crlf)
-	(printout t "?name - ?term : " (str-compare ?name ?term) crlf)
-	(printout t "?term - ?name : " (str-compare ?term ?name) crlf crlf)
 )
 
 (defrule stopListingByName
@@ -84,14 +83,16 @@
 	=>
 	(retract ?id)
 	(retract ?sid)
+	(printout t "" crlf)
 )
 
 (defrule listSongsByArtist
 	(optiune 4)
 	(search ?term)
-	(piesa (artist ?term))
+	(piesa (artist ?art) (nume ?name))
+	(test (str-index ?term ?art))
 	=>
-	(printout t "Artist: " ?term crlf)
+	(printout t "Artist: " ?art " Nume: " ?art crlf)
 )
 
 (defrule stopListingByArtist
@@ -100,4 +101,5 @@
 	=>
 	(retract ?id)
 	(retract ?sid)
+	(printout t "" crlf)
 )
