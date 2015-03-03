@@ -143,6 +143,24 @@ void Display4(double a, double b)
 	glEnd();
 }
 
+struct punct{
+	double x;
+	double y;
+};
+
+void DrawTriangle(struct punct a, struct punct b, struct punct c)
+{
+	glColor3f(1, 0.1, 0.1);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBegin(GL_TRIANGLES);
+
+	glVertex2f(a.x, a.y);
+	glVertex2f(b.x, b.y);
+	glVertex2f(c.x, c.y);
+
+	glEnd();
+}
+
 void Display5(double a)
 {
 	double ratia = 0.05;
@@ -151,13 +169,15 @@ void Display5(double a)
 	glColor3f(1, 0.1, 0.1);
 	glBegin(GL_LINE_STRIP);
 
-	double t;
-	for (t = -pi/2 + ratia; t < pi/2; t += ratia)
-	{
-		if (t == -pi / 6 || t == pi / 6) continue;
+	struct punct p1,p2,p3;
 
+	double t;
+	for (t = -pi/2 + ratia; t < -pi/6; t += ratia)
+	{
 		double x = a / (4 * pow(cos(t), 2) - 3);
 		double y = (a * tan(t)) / (4 * pow(cos(t), 2) - 3);
+
+		printf("x:%2f\n", x);
 
 		glVertex2f(x, y);
 	}
@@ -227,22 +247,73 @@ void Display8(double r1, double r2)
 
 void Display9(double a)
 {
-	double ratia = 0.05;
+	double ratia = 0.01;
 	double pi = 4 * atan(1.0);
 
 	glColor3f(1, 0.1, 0.1);
 	glBegin(GL_LINE_STRIP);
 
-	double t;
+	double t, x, y, r, x2, y2;
 	for (t = -pi/4 + ratia; t <= pi/4; t += ratia)
 	{
-		double x = (r1 - r2)*cos(r2 / r1 * t) - r2*cos(t - r2 / r1 * t);
-		double y = (r1 - r2)*sin(r2 / r1 * t) - r2*sin(t - r2 / r1 * t);
+		r = a * sqrt(2 * cos(2 * t));
+		x = r * cos(t);
+		y = r * sin(t);
 
 		glVertex2f(x, y);
 	}
 
 	glEnd();
+	
+	glBegin(GL_LINE_STRIP);
+
+	t = -pi / 4 + ratia;
+	r = a * sqrt(2 * cos(2 * t));
+	x = r * cos(t);
+	y = r * sin(t);
+
+	glVertex2f(x, y);
+	glVertex2f(-x, -y);
+
+
+	glEnd();
+	
+	glBegin(GL_LINE_STRIP);
+	x2 = x;
+	y2 = y;
+
+	for (t = -pi / 4 + ratia; t <= pi / 4; t += ratia)
+	{
+		r = -a * sqrt(2 * cos(2 * t));
+		x = r * cos(t);
+		y = r * sin(t);
+		glVertex2f(x, y);
+	}
+
+	glEnd();
+	
+}
+
+void Display10(double a)
+{
+	double ratia = 0.01;
+	double e = 2.71828;
+
+	glColor3f(1, 0.1, 0.1);
+	glBegin(GL_LINE_STRIP);
+
+	double t, x, y, r;
+	for (t = 0; t <10000; t+= ratia)
+	{
+		r = a * pow(e, 1+t);
+		x = r * cos(t);
+		y = r * sin(t);
+
+		glVertex2f(x, y);
+	}
+
+	glEnd();
+
 }
 
 void Init(void) {
@@ -289,7 +360,9 @@ void Display(void) {
 	case '9':
 		Display9(0.4);
 		break;
-
+	case '0':
+		Display10(0.02);
+		break;
 
 	default:
 		break;
