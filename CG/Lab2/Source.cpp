@@ -143,46 +143,56 @@ void Display4(double a, double b)
 	glEnd();
 }
 
-struct punct{
-	double x;
-	double y;
-};
-
-void DrawTriangle(struct punct a, struct punct b, struct punct c)
-{
-	glColor3f(1, 0.1, 0.1);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glBegin(GL_TRIANGLES);
-
-	glVertex2f(a.x, a.y);
-	glVertex2f(b.x, b.y);
-	glVertex2f(c.x, c.y);
-
-	glEnd();
-}
-
 void Display5(double a)
 {
-	double ratia = 0.05;
+	double ratia = 0.01;
 	double pi = 4 * atan(1.0);
 
-	glColor3f(1, 0.1, 0.1);
+	glColor3f(0.1, 0.1, 0.9);
 	glBegin(GL_LINE_STRIP);
 
-	struct punct p1,p2,p3;
-
 	double t;
-	for (t = -pi/2 + ratia; t < -pi/6; t += ratia)
+	for (t = -pi / 2 + ratia; t < -pi / 6; t += ratia)
 	{
 		double x = a / (4 * pow(cos(t), 2) - 3);
 		double y = (a * tan(t)) / (4 * pow(cos(t), 2) - 3);
-
-		printf("x:%2f\n", x);
-
 		glVertex2f(x, y);
+	}
+	
+	glEnd();
+	glColor3f(1, 0.1, 0.1);
+	glBegin(GL_TRIANGLES);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	int c = 0;
+
+	for (t = -pi/2 + ratia; t < -pi/6; t += ratia)
+	{
+		if (c == 0){
+			glVertex2f(-1.0, 1.0);
+		}
+		double x = a / (4 * pow(cos(t), 2) - 3);
+		double y = (a * tan(t)) / (4 * pow(cos(t), 2) - 3);
+		if (x > -0.079 || x < -0.2 ){
+			glVertex2f(x, y);
+			//printf("(%2f : %f)\n", x, y);
+			(++c) %= 2;
+		}
 	}
 
 	glEnd();
+	
+	/*double t2, step = pi / 1000;
+	for (t = -pi / 2, t2 = t+step; t < -pi / 6; t += 2*step)
+	{
+		p2.x = a / (4 * pow(cos(t), 2) - 3);
+		p2.y = (a * tan(t)) / (4 * pow(cos(t), 2) - 3);
+
+		p3.x = a / (4 * pow(cos(t2), 2) - 3);
+		p3.y = (a * tan(t2)) / (4 * pow(cos(t2), 2) - 3);
+
+		if (fabs(p2.x) < 1.0  && fabs(p3.x) < 1.0)
+			DrawTriangle(p1, p3, p2);
+	}*/
 }
 
 void Display6(double a, double b)
