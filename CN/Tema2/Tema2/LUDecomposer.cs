@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Tema2
 {
-    public class LUDecomposition
+    public class LUDecomposer
     {
         private double _precision;
 
@@ -60,15 +60,17 @@ namespace Tema2
             var size = Math.Sqrt(matrix.Length);
             if (size == (int) size)
             {
-                InitialMatrix = matrix;
-                Matrix = matrix;
-                MatrixSize = (int) size;
+                MatrixSize = (int)size;
+                InitialMatrix = new double[MatrixSize*MatrixSize];
+                Matrix = new double[MatrixSize*MatrixSize];
+                matrix.CopyTo(InitialMatrix, 0);
+                matrix.CopyTo(Matrix, 0);
             }
             else
                 throw new InvalidDataException("Invalid matrix size");
         }
 
-        public LUDecomposition(int precisionPower)
+        public LUDecomposer(int precisionPower)
         {
             _precision = Math.Pow(10, precisionPower);
         }
@@ -162,6 +164,18 @@ namespace Tema2
         {
             if (i <= j)
                 Matrix[i*MatrixSize + j] = value;
+        }
+
+        public double ComputeDeterminant()
+        {
+            double determinant = 1;
+            if (_decomposed)
+            {
+                for (int i = 0; i < MatrixSize; i++)
+                    determinant *= AGet(i, i);
+            }
+
+            return determinant;
         }
     }
 

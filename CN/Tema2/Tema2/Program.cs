@@ -6,7 +6,7 @@ namespace Tema2
     {
         static void Main(string[] args)
         {
-            var lu = new LUDecomposition(-15);
+            var lu = new LUDecomposer(-15);
             var matrix = new double[]
             {
                 4, 2, 6,
@@ -32,6 +32,44 @@ namespace Tema2
             Console.WriteLine(lu.LMatrix.NiceMatrixDisplay());
             Console.WriteLine("\nU matrix");
             Console.WriteLine(lu.UMatrix.NiceMatrixDisplay());
+
+            Console.WriteLine("\nDeterminant: {0}", lu.ComputeDeterminant());
+
+            var es = new EcuationSolver(-15);
+            var vector = new double[] {14, 16, 12};
+            es.Prepare(result, vector);
+            var solution = es.ComputeSolution();
+
+            Console.WriteLine("\nEcuation solution:");
+            Console.WriteLine(solution.NiceSolutionDisplay());
+
+            var norm = ComputeNorm(matrix, vector, solution);
+            Console.WriteLine("\nFinal: {0}", norm);
+        }
+
+        private static double ComputeNorm(double[] matrix, double[] vector, double[] solution)
+        {
+            var resVector = new double[vector.Length];
+
+            for (int i = 0; i < vector.Length; i++)
+            {
+                double sum = 0;
+
+                for (int j = 0; j < vector.Length; j++)
+                {
+                    sum += matrix[i*vector.Length + j]*solution[j];
+                }
+
+                resVector[i] = sum;
+            }
+
+            double anotherSum = 0;
+            for (int i = 0; i < vector.Length; i++)
+            {
+                anotherSum += Math.Pow(resVector[i]-vector[i], 2);
+            }
+
+            return Math.Sqrt(anotherSum);
         }
 
     }
