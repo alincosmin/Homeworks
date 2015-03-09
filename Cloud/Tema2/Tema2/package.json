@@ -1,0 +1,10 @@
+{
+  "name": "Tema2",
+  "version": "0.0.0",
+  "description": "Tema2",
+  "main": "server.js",
+  "author": {
+    "name": "Alin",
+    "email": ""
+  }
+}

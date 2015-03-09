@@ -10,7 +10,7 @@ namespace Tema2
             var matrix = new double[]
             {
                 4, 2, 6,
-                2, 4, 6,
+                8, 4, 6,
                 2, 2, 5
             };
 
