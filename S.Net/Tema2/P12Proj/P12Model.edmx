@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="P12Proj.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="20" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="20" />
+          <Property Name="AddressLine1" Type="nvarchar" MaxLength="25" />
+          <Property Name="AddressLine2" Type="nvarchar" MaxLength="25" />
+          <Property Name="City" Type="nvarchar" MaxLength="30" />
+          <Property Name="State" Type="nvarchar" MaxLength="20" />
+          <Property Name="ZipCode" Type="int" />
+        </EntityType>
+        <EntityContainer Name="P12ProjStoreContainer">
+          <EntitySet Name="Agent" EntityType="Self.Agent" Schema="P12" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="P12Proj" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="P12Proj.Name" Nullable="false" />
+          <Property Name="Address" Type="P12Proj.Address" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="P12Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Agents" EntityType="Self.Agent" />
+        </EntityContainer>
+        <ComplexType Name="Name">
+          <Property Type="String" Name="FirstName" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastName" MaxLength="20" FixedLength="false" Unicode="true" />
+        </ComplexType>
+        <ComplexType Name="Address" >
+          <Property Type="String" Name="AddressLine1" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AddressLine2" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="City" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="State" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ZipCode" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="P12ProjStoreContainer" CdmEntityContainer="P12Entities">
+          <EntitySetMapping Name="Agents">
+            <EntityTypeMapping TypeName="P12Proj.Agent">
+              <MappingFragment StoreEntitySet="Agent">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ComplexProperty Name="Name">
+                  <ScalarProperty Name="LastName" ColumnName="LastName" />
+                  <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                </ComplexProperty>
+                <ComplexProperty Name="Address">
+                  <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                  <ScalarProperty Name="State" ColumnName="State" />
+                  <ScalarProperty Name="City" ColumnName="City" />
+                  <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                  <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                </ComplexProperty>
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

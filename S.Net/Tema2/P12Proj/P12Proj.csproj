@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A1FBB379-F2B8-4F66-99E8-52BF8AA00268}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{AD2DDCB2-4E9C-4C97-81FA-A60C00DBCFF4}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tema2</RootNamespace>
-    <AssemblyName>Tema2</AssemblyName>
+    <RootNamespace>P12Proj</RootNamespace>
+    <AssemblyName>P12Proj</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,8 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
@@ -42,6 +39,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,30 +48,57 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Address.cs">
+      <DependentUpon>P12Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Agent.cs">
+      <DependentUpon>P12Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Name.cs">
+      <DependentUpon>P12Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="P12Model.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>P12Model.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="P12Model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>P12Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="P12Model.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>P12Model.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <EntityDeploy Include="P12Model.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>P12Model.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="P12Model.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>P12Model.edmx</DependentUpon>
+      <LastGenOutput>P12Model.Context.cs</LastGenOutput>
+    </None>
+    <None Include="P12Model.edmx.diagram">
+      <DependentUpon>P12Model.edmx</DependentUpon>
+    </None>
+    <None Include="P12Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>P12Model.edmx</DependentUpon>
+      <LastGenOutput>P12Model.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\P12Proj\P12Proj.csproj">
-      <Project>{ad2ddcb2-4e9c-4c97-81fa-a60c00dbcff4}</Project>
-      <Name>P12Proj</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\P3Proj\P3Proj.csproj">
-      <Project>{0bd6c2c2-c84c-459e-9137-2f9020b9597a}</Project>
-      <Name>P3Proj</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\P6Proj\P6Proj.csproj">
-      <Project>{70343751-0e47-4070-b9ed-40b32340f667}</Project>
-      <Name>P6Proj</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\P9Proj\P9Proj.csproj">
-      <Project>{63cb9760-2a06-41da-a5fc-279562505ac0}</Project>
-      <Name>P9Proj</Name>
-    </ProjectReference>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
