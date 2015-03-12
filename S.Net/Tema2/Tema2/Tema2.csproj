@@ -65,6 +65,10 @@
       <Project>{70343751-0e47-4070-b9ed-40b32340f667}</Project>
       <Name>P6Proj</Name>
     </ProjectReference>
+    <ProjectReference Include="..\P9Proj\P9Proj.csproj">
+      <Project>{63cb9760-2a06-41da-a5fc-279562505ac0}</Project>
+      <Name>P9Proj</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

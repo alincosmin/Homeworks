@@ -2,6 +2,7 @@
 using System.Linq;
 using P3Proj;
 using P6Proj;
+using P9Proj;
 
 namespace Tema2
 {
@@ -14,6 +15,34 @@ namespace Tema2
 
             Console.WriteLine("\n\n/// P6 Test");
             P6Test();
+
+            Console.WriteLine("\n\n/// P9 Test");
+            P9Test();
+        }
+
+        private static void P9Test()
+        {
+            using (var context = new P9Proj.Entities())
+            {
+                context.Database.ExecuteSqlCommand(@"INSERT INTO P9.FilteredObject
+(DeletedOn,Description) values ('2/10/2009','Nulled date')");
+
+                var account = new FilteredObject { Description = "Description A" };
+                context.FilteredObjects.Add(account);
+                account = new FilteredObject { Description = "Description B" };
+                context.FilteredObjects.Add(account);
+                account = new FilteredObject { Description = "Description C" };
+                context.FilteredObjects.Add(account);
+                context.SaveChanges();
+            }
+            using (var context = new P9Proj.Entities())
+            {
+                Console.WriteLine("Objects:");
+                foreach (var obj in context.FilteredObjects)
+                {
+                    Console.WriteLine("{0}) {1}", obj.Id, obj.Description);
+                }
+            }
         }
 
         private static void P3Test()
