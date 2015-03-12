@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using P10Proj;
+using P11Proj;
 using P12Proj;
 using P3Proj;
 using P6Proj;
@@ -20,8 +22,130 @@ namespace Tema2
             Console.WriteLine("\n\n/// P9 Test");
             P9Test();
 
+            Console.WriteLine("\n\n/// P10 Test");
+            P10Test();
+
+            Console.WriteLine("\n\n/// P11 Test");
+            P11Test();
+
             Console.WriteLine("\n\n/// P12 Test");
             P12Test();
+        }
+
+        private static void P10Test()
+        {
+            using (var context = new P10Entities())
+            {
+                if (!context.Employees.Any())
+                {
+                    var fte = new FullTimeEmployee
+                            {
+                                FirstName = "Jane",
+                                LastName = "Doe",
+                                Salary = 71500M
+                            };
+                    context.Employees.Add(fte);
+                    fte = new FullTimeEmployee
+                    {
+                        FirstName = "John",
+                        LastName = "Smith",
+                        Salary = 62500M
+                    };
+                    context.Employees.Add(fte);
+                    var hourly = new HourlyEmployee
+                    {
+                        FirstName = "Tom",
+                        LastName = "Jones",
+                        Wage = 8.75M
+                    };
+                    context.Employees.Add(hourly);
+                    context.SaveChanges(); 
+                }
+            }
+
+            using (var context = new P10Entities())
+            {
+                Console.WriteLine("--- All Employees ---");
+                foreach (var emp in context.Employees)
+                {
+                    bool fullTime = emp is HourlyEmployee ? false : true;
+                    Console.WriteLine("{0} {1} ({2})", emp.FirstName, emp.LastName,
+                    fullTime ? "Full Time" : "Hourly");
+                }
+                Console.WriteLine("--- Full Time ---");
+                foreach (var fte in context.Employees.OfType<FullTimeEmployee>())
+                {
+                    Console.WriteLine("{0} {1}", fte.FirstName, fte.LastName);
+                }
+                Console.WriteLine("--- Hourly ---");
+                foreach (var hourly in context.Employees.OfType<HourlyEmployee>())
+                {
+                    Console.WriteLine("{0} {1}", hourly.FirstName, hourly.LastName);
+                }
+            }
+        }
+
+        private static void P11Test()
+        {
+            using (var context = new P11Entities())
+            {
+                if (!context.Locations.Any())
+                {
+                    var park = new Park
+                            {
+                                Name = "11th Street Park",
+                                Address = "801 11th Street",
+                                City = "Aledo",
+                                State = "TX",
+                                ZipCode = 76106
+                            };
+                    var loc = new Location
+                    {
+                        Address = "501 Main",
+                        City = "Weatherford",
+                        State = "TX",
+                        ZipCode = 76201
+                    };
+                    park.Office = loc;
+                    context.Locations.Add(park);
+                    park = new Park
+                    {
+                        Name = "Overland Park",
+                        Address = "101 High Drive",
+                        City = "Springtown",
+                        State = "TX",
+                        ZipCode = 76081
+                    };
+                    loc = new Location
+                    {
+                        Address = "8705 Range Lane",
+                        City = "Springtown",
+                        State = "TX",
+                        ZipCode = 76081
+                    };
+                    park.Office = loc;
+                    context.Locations.Add(park);
+                    context.SaveChanges(); 
+                }
+            }
+
+            using (var context = new P11Entities())
+            {
+                context.Configuration.LazyLoadingEnabled = true;
+                Console.WriteLine("-- All Locations -- ");
+                foreach (var l in context.Locations)
+                {
+                    Console.WriteLine("{0}, {1}, {2} {3}", l.Address, l.City,
+                    l.State, l.ZipCode);
+                }
+                Console.WriteLine("--- Parks ---");
+                foreach (var p in context.Locations.OfType<Park>())
+                {
+                    Console.WriteLine("{0} is at {1} in {2}", p.Name, p.Address, p.City);
+                    Console.WriteLine("\tOffice: {0}, {1}, {2} {3}", p.Office.Address,
+                    p.Office.City, p.Office.State, p.Office.ZipCode);
+                }
+            }
         }
 
         private static void P12Test()
