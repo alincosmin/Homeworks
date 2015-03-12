@@ -5,6 +5,7 @@ using P11Proj;
 using P12Proj;
 using P3Proj;
 using P6Proj;
+using P8Proj;
 using P9Proj;
 
 namespace Tema2
@@ -19,6 +20,9 @@ namespace Tema2
             Console.WriteLine("\n\n/// P6 Test");
             P6Test();
 
+            Console.WriteLine("\n\n/// P8 Test");
+            P8Test();
+
             Console.WriteLine("\n\n/// P9 Test");
             P9Test();
 
@@ -30,6 +34,62 @@ namespace Tema2
 
             Console.WriteLine("\n\n/// P12 Test");
             P12Test();
+        }
+
+        private static void P8Test()
+        {
+            using (var context = new P8Entities())
+            {
+                if (!context.Businesses.Any())
+                {
+                    var business = new Business
+                            {
+                                Name = "Corner Dry Cleaning",
+                                LicenseNumber = "100x1"
+                            };
+                    context.Businesses.Add(business);
+                    var retail = new Retail
+                    {
+                        Name = "Shop and Save",
+                        LicenseNumber = "200C",
+                        Address = "101 Main",
+                        City = "Anytown",
+                        State = "TX",
+                        ZIPCode = "76106"
+                    };
+                    context.Businesses.Add(retail);
+                    var web = new eCommerce
+                    {
+                        Name = "BuyNow.com",
+                        LicenseNumber = "300AB",
+                        URL = "www.buynow.com"
+                    };
+                    context.Businesses.Add(web);
+                    context.SaveChanges(); 
+                }
+            }
+
+            using (var context = new P8Entities())
+            {
+                Console.WriteLine("\n--- All Businesses ---");
+                foreach (var b in context.Businesses)
+                {
+                    Console.WriteLine("{0} (#{1})", b.Name, b.LicenseNumber);
+                }
+                Console.WriteLine("\n--- Retail Businesses ---");
+                foreach (var r in context.Businesses.OfType<Retail>())
+                {
+                    Console.WriteLine("{0} (#{1})", r.Name, r.LicenseNumber);
+                    Console.WriteLine("{0}", r.Address);
+                    Console.WriteLine("{0}, {1} {2}", r.City, r.State, r.ZIPCode);
+                }
+                Console.WriteLine("\n--- eCommerce Businesses ---");
+                foreach (var e in context.Businesses.OfType<eCommerce>())
+                {
+                    Console.WriteLine("{0} (#{1})", e.Name, e.LicenseNumber);
+                    Console.WriteLine("Online address is: {0}", e.URL);
+                }
+            }
         }
 
         private static void P10Test()
