@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cloud HW3</title>
+	<style>
+	#images img {
+		width: 250px;
+		height: 190px;
+	}
+	</style>
+</head>
+<body>
+<p>{{.Welcome}}</p>
+<div id="images">
+{{range $img := .Images}}
+<img src="{{$img}}" />
+{{end}}
+</div>
+<p>{{.EndPage}}</p>
+</body>
+</html>

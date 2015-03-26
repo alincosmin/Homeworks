@@ -1,0 +1,10 @@
+Examples:
+
+GET: /api/books
+GET: /api/books/2
+HEAD: /api/books/2
+POST: /api/books/
+	{name: 'test',authors : ['cineva']}
+
+PUT: /api/books/4
+	{BookName: 'test',Authors: ['altcineva']}
