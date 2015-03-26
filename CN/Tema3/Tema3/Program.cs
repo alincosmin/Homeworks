@@ -9,17 +9,20 @@ namespace Tema3
         {
             var matrix = new double[][]
             {
-                new double[]{4,2,6},
-                new double[]{2,4,6},
-                new double[]{2,2,5} 
+                new double[]{1,-1,4},
+                new double[]{1,4,-2},
+                new double[]{1,4,2},
+                new double[]{1,-1, }, 
             };
 
-            var initialVector = new double[] {14, 16, 12};
+            var initialVector = new double[] {12, 6, -4};
 
-            var v1 = ComputeVector(matrix, initialVector);
+            var vector = ComputeVector(matrix, initialVector);
 
             var json = new JavaScriptSerializer();
-            Console.WriteLine(json.Serialize(v1));
+            Console.WriteLine(json.Serialize(vector));
+
+
         }
 
         private static double[] ComputeVector(double[][] matrix, double[] initialVector)

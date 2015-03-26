@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -50,8 +51,10 @@ namespace Tema2.Controllers
             };
 
             _books.Add(book);
+            var response = Request.CreateResponse(HttpStatusCode.Created, book);
+            response.Headers.Location = new Uri(Request.RequestUri, book.URI);
 
-            return Request.CreateResponse(HttpStatusCode.Created, book);
+            return response;
         }
 
         [HttpPut]
@@ -76,8 +79,18 @@ namespace Tema2.Controllers
             }
             else throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var retCode = isNew ? HttpStatusCode.Created : HttpStatusCode.OK;
-            return Request.CreateResponse(retCode, existing);
+            HttpResponseMessage response;
+            if (isNew)
+            {
+                response = Request.CreateResponse(HttpStatusCode.Created, existing);
+                response.Headers.Location = new Uri(Request.RequestUri, existing.URI);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.OK, existing);
+            }
+
+            return response;
         }
 
         [HttpDelete]
