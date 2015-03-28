@@ -261,6 +261,31 @@ public:
 
 		DrawCircleArc(raza);
 	}
+
+	void DrawEllipse(float razaX, float razaY)
+	{
+		float grila_linie = 2. / _linii;
+		float grila_coloana = 2. / _coloane;
+		const float DEG2RAD = 3.14159 / 180;
+		float cosval, sinval;
+
+		float diff_x = (_coloane - 2 * razaX) / (float)_coloane;
+		float diff_y = (_linii - 2 * razaY) / (float)_linii;
+
+		glLineWidth(5);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glBegin(GL_LINE_LOOP);
+
+		for (int i = 0; i<360; i++)
+		{
+			float rad = i*DEG2RAD;
+			cosval = cos(i*DEG2RAD) * razaX * grila_coloana - diff_x;
+			sinval = sin(i*DEG2RAD) * razaY * grila_linie - diff_y;
+			glVertex2f(cosval, sinval);
+		}
+
+		glEnd();
+	}
 };
 
 void DisplayLines(){
@@ -276,8 +301,13 @@ void DisplayCircle(){
 	GrilaCarteziana* grila = new GrilaCarteziana(16, 16);
 	grila->Draw();
 	grila->writePixel(0, 0);
-
 	grila->DrawCircle(14);
+}
+
+void DisplayEllipse(){
+	GrilaCarteziana* grila = new GrilaCarteziana(28, 28);
+	grila->Draw();
+	grila->DrawEllipse(14, 8);
 }
 
 void Display(void) {
@@ -292,6 +322,9 @@ void Display(void) {
 		break;
 	case '2':
 		DisplayCircle();
+		break;
+	case '3':
+		DisplayEllipse();
 		break;
 	default:
 		break;
