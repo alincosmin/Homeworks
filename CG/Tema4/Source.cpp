@@ -76,6 +76,12 @@ public:
 		
 	}
 
+	void writePixelLog(int linie, int coloana)
+	{
+		printf("(%d %d)\n", linie, coloana);
+		writePixel(linie, coloana);
+	}
+
 	void DrawCircleArc(int raza)
 	{
 		float grila_linie = 2. / _linii;
@@ -209,6 +215,28 @@ public:
 
 		DrawEllipseOutline(razaY, razaX);
 	}
+
+	void DrawPolygonOutline(Punct* varfuri, int nr_varfuri)
+	{
+		float grila_linie = 2. / _linii;
+		float grila_coloana = 2. / _coloane;
+		
+		glLineWidth(5);
+		glColor3f(1, 0.1, 0.1);
+		glBegin(GL_LINE_LOOP);
+
+		for (int i = 0; i < nr_varfuri; i++)
+		{
+			glVertex2f(-1 + grila_coloana * varfuri[i].X, -1 + grila_linie * varfuri[i].Y);
+		}
+
+		glEnd();
+	}
+
+	void DrawPolygon(Punct* varfuri, int nr_varfuri)
+	{
+		DrawPolygonOutline(varfuri, nr_varfuri);
+	}
 };
 
 void DisplayCircle(){
@@ -226,8 +254,24 @@ void DisplayEllipse(){
 }
 
 void DisplyPolygon(){
-	GrilaCarteziana* grila = new GrilaCarteziana(28, 28);
+	GrilaCarteziana* grila = new GrilaCarteziana(16, 16);
 	grila->Draw();
+
+	Punct* varfuriPoligon = new Punct[10];
+	varfuriPoligon[0].X = 2;
+	varfuriPoligon[0].Y = 3;
+	varfuriPoligon[1].X = 7;
+	varfuriPoligon[1].Y = 1;
+	varfuriPoligon[2].X = 13;
+	varfuriPoligon[2].Y = 5;
+	varfuriPoligon[3].X = 13;
+	varfuriPoligon[3].Y = 11;
+	varfuriPoligon[4].X = 7;
+	varfuriPoligon[4].Y = 7;
+	varfuriPoligon[5].X = 2;
+	varfuriPoligon[5].Y = 9;
+
+	grila->DrawPolygon(varfuriPoligon, 6);
 }
 
 void Display(void) {
