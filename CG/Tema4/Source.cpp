@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <fstream>
 
 #include "glut.h"
 
@@ -236,6 +237,7 @@ public:
 	void DrawPolygon(Punct* varfuri, int nr_varfuri)
 	{
 		DrawPolygonOutline(varfuri, nr_varfuri);
+		// lipseste partea de umplere
 	}
 };
 
@@ -253,23 +255,33 @@ void DisplayEllipse(){
 	grila->writePixel(8, 14);
 }
 
+int ReadPolygon(char * filename, Punct** output)
+{
+	*output = new Punct[20];
+	ifstream file(filename);
+	int nr_varfuri, i;
+	file >> nr_varfuri;
+
+	i = 0;
+	for (; i < nr_varfuri; i++)
+	{
+		file >> (*output)[i].X >> (*output)[i].Y;
+	}
+
+	return i;
+}
+
 void DisplyPolygon(){
 	GrilaCarteziana* grila = new GrilaCarteziana(16, 16);
 	grila->Draw();
 
-	Punct* varfuriPoligon = new Punct[10];
-	varfuriPoligon[0].X = 2;
-	varfuriPoligon[0].Y = 3;
-	varfuriPoligon[1].X = 7;
-	varfuriPoligon[1].Y = 1;
-	varfuriPoligon[2].X = 13;
-	varfuriPoligon[2].Y = 5;
-	varfuriPoligon[3].X = 13;
-	varfuriPoligon[3].Y = 11;
-	varfuriPoligon[4].X = 7;
-	varfuriPoligon[4].Y = 7;
-	varfuriPoligon[5].X = 2;
-	varfuriPoligon[5].Y = 9;
+	Punct* varfuriPoligon;
+	int varfuri = ReadPolygon("poligon.txt", &varfuriPoligon);
+	printf("%d varfuri\n", 6);
+	for (int i = 0; i < varfuri; i++)
+	{
+		printf("- %d, %d\n", varfuriPoligon[i].X, varfuriPoligon[i].Y);
+	}
 
 	grila->DrawPolygon(varfuriPoligon, 6);
 }
