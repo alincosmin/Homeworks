@@ -73,138 +73,7 @@ public:
 		}
 		glEnd();
 
-		//printf("(%d %d)\n", linie, coloana);
-	}
-
-	void DrawLine(int ax, int ay, int bx, int by){
-		Punct a, b;
-		a.X = ax;
-		a.Y = ay;
-		b.X = bx;
-		b.Y = by;
-
-		DrawLine(a, b);
-	}
-
-	void DrawLine(Punct punctA, Punct punctB){
-		float grila_linie = 2. / _linii;
-		float grila_coloana = 2. / _coloane;
-
-		Punct punctC, punctD;
-
-		int d, dE, dNE, dSE, dN, dS;
-		if (punctA.X > punctB.X)
-		{
-			Punct aux = punctA;
-			punctA = punctB;
-			punctB = aux;
-		}
-
-		punctD.X = punctB.X - punctA.X;
-		punctD.Y = punctB.Y - punctA.Y;
-
-		punctC = punctA;
-
-		if (punctD.Y >= 0)
-		{
-			if (abs(punctD.Y) <= abs(punctD.X))
-			{
-				d = 2 * punctD.Y - punctD.X;
-				dE = 2 * punctD.Y;
-				dNE = 2 * (punctD.Y - punctD.X);
-
-				while (punctC.X <= punctB.X)
-				{
-					writePixel(punctC.Y, punctC.X);
-					if (d <= 0)
-					{
-						d += dE;
-						punctC.X++;
-					}
-					else
-					{
-						d += dNE;
-						punctC.X++;
-						punctC.Y++;
-					}
-				}
-			}
-			else
-			{
-				d = punctD.Y - 2 * punctD.X;
-				dN = -2 * punctD.X;
-				dNE = 2 * (punctD.Y - punctD.X);
-
-				while (punctC.Y <= punctB.Y)
-				{
-					writePixel(punctC.Y, punctC.X);
-					if (d > 0)
-					{
-						d += dN;
-						punctC.Y++;
-					}
-					else
-					{
-						d += dNE;
-						punctC.X++;
-						punctC.Y++;
-					}
-				}
-			}
-		}
-		else
-		{
-			if (abs(punctD.Y) <= abs(punctD.X))
-			{
-				d = 2 * punctD.Y + punctD.X;
-				dE = 2 * punctD.Y;
-				dSE = 2 * (punctD.Y + punctD.X);
-
-				while (punctC.X <= punctB.X)
-				{
-					writePixel(punctC.Y, punctC.X);
-					if (d > 0)
-					{
-						d += dE;
-						punctC.X++;
-					}
-					else
-					{
-						d += dSE;
-						punctC.X++;
-						punctC.Y--;
-					}
-				}
-			}
-			else
-			{
-				d = punctD.Y + 2 * punctD.X;
-				dS = 2 * punctD.X;
-				dSE = 2 * (punctD.Y + punctD.X);
-
-				while (punctC.Y >= punctB.Y)
-				{
-					writePixel(punctC.Y, punctC.X);
-					if (d <= 0)
-					{
-						d += dS;
-						punctC.Y--;
-					}
-					else
-					{
-						d += dSE;
-						punctC.X++;
-						punctC.Y--;
-					}
-				}
-			}
-		}
-		glLineWidth(5);
-		glColor3f(1, 0.1, 0.1);
-		glBegin(GL_LINES);
-		glVertex2f(-1 + grila_coloana * punctA.X, -1 + grila_linie * punctA.Y);
-		glVertex2f(-1 + grila_coloana * punctB.X, -1 + grila_linie * punctB.Y);
-		glEnd();
+		
 	}
 
 	void DrawCircleArc(int raza)
@@ -262,7 +131,7 @@ public:
 		DrawCircleArc(raza);
 	}
 
-	void DrawEllipse(float razaX, float razaY)
+	void DrawEllipseOutline(float razaX, float razaY)
 	{
 		float grila_linie = 2. / _linii;
 		float grila_coloana = 2. / _coloane;
@@ -286,16 +155,61 @@ public:
 
 		glEnd();
 	}
-};
 
-void DisplayLines(){
-	GrilaCarteziana* grila = new GrilaCarteziana(16, 16);
-	grila->Draw();
-	grila->writePixel(0, 0);
-	
-	grila->DrawLine(0, 16, 16, 11);
-	grila->DrawLine(0, 0, 16, 7);
-}
+	void DrawEllipse(float razaY, float razaX)
+	{
+		int x = 0, y = razaY, k, m;
+		double razaX2 = razaX*razaX;
+		double razaY2 = razaY*razaY;
+
+		double d1 = razaY2 - razaX2*razaY + razaX2 / 4.0;
+		double d2;
+		writePixel(x, y);
+		
+		while (razaX2*(y - 0.5) > razaY2*(x + 1))
+		{
+			if (d1 < 0)
+			{
+				d1 += razaY2 * (2 * x + 3);
+				x++;
+			}
+			else 
+			{
+				d1 += razaY2 * (2 * x + 3) + razaX2*(-2 * y + 2);
+				x++;
+				y--;
+			}
+
+			//writePixel(-x + razaX, -y+razaY);
+			k = -x + razaX;
+			m = -y + razaY;
+			while (k < razaX) { writePixel(++k, m); }
+		}
+
+		d2 = razaY2*pow(x + 0.5, 2) + razaX2*pow(y - 1.0, 2) - razaX2*razaY2;
+		while (y > 0)
+		{
+			if (d2 < 0)
+			{
+				d2 += razaY2 * (2 * x + 2) + razaX2*(-2 * y + 3);
+				x++;
+				y--;
+			}
+			else
+			{
+				d2 += razaX2*(-2 * y + 3);
+				y--;
+			}
+
+			//writePixelLog(-x+razaX, -y+razaY);
+			k = -x + razaX;
+			m = -y + razaY;
+			while (k < razaX) { writePixel(++k, m); }
+		}
+
+		DrawEllipseOutline(razaY, razaX);
+	}
+};
 
 void DisplayCircle(){
 	GrilaCarteziana* grila = new GrilaCarteziana(16, 16);
@@ -308,6 +222,12 @@ void DisplayEllipse(){
 	GrilaCarteziana* grila = new GrilaCarteziana(28, 28);
 	grila->Draw();
 	grila->DrawEllipse(14, 8);
+	grila->writePixel(8, 14);
+}
+
+void DisplyPolygon(){
+	GrilaCarteziana* grila = new GrilaCarteziana(28, 28);
+	grila->Draw();
 }
 
 void Display(void) {
@@ -318,13 +238,13 @@ void Display(void) {
 
 	switch (prevKey) {
 	case '1':
-		DisplayLines();
-		break;
-	case '2':
 		DisplayCircle();
 		break;
-	case '3':
+	case '2':
 		DisplayEllipse();
+		break;
+	case '3':
+		DisplyPolygon();
 		break;
 	default:
 		break;
