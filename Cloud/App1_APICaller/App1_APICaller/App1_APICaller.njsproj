@@ -44,6 +44,7 @@
     <Content Include="public\stylesheets\bootstrap.css" />
     <Content Include="public\stylesheets\style.css" />
     <Content Include="public\stylesheets\style.styl" />
+    <Content Include="public\test-polling.html" />
     <Content Include="README.md" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />

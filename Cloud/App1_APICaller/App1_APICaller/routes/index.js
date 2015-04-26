@@ -8,4 +8,15 @@ router.get('/search/:term', function(req, res) {
     res.send(response);
 });
 
+router.get('/getLetters', function(req, res) {
+    var response = "abcdefghijklmnopqrstuvwxyz";
+
+    for (var i = 0; i < response.length; i++) {
+        setTimeout(function() {
+            res.send(200, 1);
+        }, 1000);
+    }
+
+});
+
 module.exports = router;

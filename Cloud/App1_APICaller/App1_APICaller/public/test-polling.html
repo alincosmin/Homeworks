@@ -1,0 +1,26 @@
+<!DOCTYPE >
+<html>
+	<head>
+	<script type="text/javascript">
+	function getLetters(){
+		console.log("clicked");
+		if(window.XMLHttpRequest){
+			xmlhttp = new XMLHttpRequest();
+		}
+
+		xmlhttp.onreadystatechange = function(){
+			if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+				document.getElementById("target").innerHTML = xmlhttp.responseText;
+			}
+		}
+
+		xmlhttp.open("GET", "/getLetters");
+		xmlhttp.send();
+	}
+	</script>
+	</head>
+	<body>
+	<h3>Test</h3>
+	<p><span>Response: </span><span id="target"></span></p>
+	<button onclick="getLetters()">Test</button>
+</html>
