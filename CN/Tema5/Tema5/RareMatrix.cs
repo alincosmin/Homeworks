@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
-namespace Tema4
+namespace Tema5
 {
     public class RareMatrix
     {
@@ -74,6 +72,11 @@ namespace Tema4
             {
                 nodeList.Sort((firstNode, secondNode) => firstNode.ColumnIndex < secondNode.ColumnIndex ? -1 : 1);
             }
+        }
+
+        public double[] SolveGaussSeidell(double[] array)
+        {
+            
         }
     }
 }

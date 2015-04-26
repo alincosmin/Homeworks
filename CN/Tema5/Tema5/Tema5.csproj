@@ -7,8 +7,8 @@
     <ProjectGuid>{08969F16-156D-4B8A-BCB9-46A83188923C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tema4</RootNamespace>
-    <AssemblyName>Tema4</AssemblyName>
+    <RootNamespace>Tema5</RootNamespace>
+    <AssemblyName>Tema5</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -51,6 +51,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="m_rar_2015_1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="m_rar_2015_2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="m_rar_2015_3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="m_rar_2015_4.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

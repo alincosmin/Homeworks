@@ -3,14 +3,29 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Tema4
+namespace Tema5
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var matrix1 = new RareMatrix(new StreamReader("m_rar_2015_1.txt"));
-            var array1 = ReadArray(new StreamReader("m_rar_2015_1.txt"));
+            var files = new []
+            {
+                "m_rar_2015_1.txt",
+                "m_rar_2015_2.txt",
+                "m_rar_2015_3.txt",
+                "m_rar_2015_4.txt"
+            };
+
+            foreach (var path in files)
+            {
+                Console.WriteLine("Fisierul: {0}", path);
+                var matrix = new RareMatrix(new StreamReader(path));
+                var array = ReadArray(new StreamReader(path));
+                Console.WriteLine("--- {0} elemente", array.Length);
+
+                Console.WriteLine();
+            }
         }
 
         private static double[] ReadArray(StreamReader reader)
