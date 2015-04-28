@@ -24,6 +24,13 @@ namespace Tema5
                 var array = ReadArray(new StreamReader(path));
                 Console.WriteLine("--- {0} elemente", array.Length);
 
+                var result = matrix.SolveGaussSeidell(array);
+                Console.WriteLine("--- {0} elemente in rezultat Gauss-Seidell", result.Length);
+
+                var prod = matrix.Multiply(array);
+                var norm = RareMatrix.ComputeNorm(prod, result);
+                Console.WriteLine("--- Norma ||AxGS - b||: {0}", norm);
+
                 Console.WriteLine();
             }
         }
