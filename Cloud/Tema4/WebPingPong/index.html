@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="PingPong.js"></script>
+    <title>PingPong</title>
+</head>
+
+<body>
+    <canvas id="canvas" style="border:1px solid #ddd; background:#eee;"></canvas>
+
+<script type="text/javascript">
+    var me = setInterval(function() {
+        if(document.readyState === 'complete') {
+            clearInterval(me);
+            PingPong.ball();
+        }
+    });
+</script>
+
+</body>
+</html>
