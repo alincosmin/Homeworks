@@ -2,6 +2,9 @@
 <html>
 <head>
     <script type="text/javascript" src="PingPong.js"></script>
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="signalr/hubs"></script>
     <title>PingPong</title>
 </head>
 
@@ -9,11 +12,34 @@
     <canvas id="canvas" style="border:1px solid #ddd; background:#eee;"></canvas>
 
 <script type="text/javascript">
-    var me = setInterval(function() {
-        if(document.readyState === 'complete') {
-            clearInterval(me);
-            PingPong.ball();
+    $(function () {
+        var pong = PingPong;
+        var chat = $.connection.gameHub;
+        var myId = '';
+        
+
+        chat.client.broadcastPositions = function (playerOnePosition, playerTwoPosition) {
+            console.log(playerOnePosition);
+            console.log(playerTwoPosition);
+        };
+
+        chat.client.updateScores = function(scoreA, scoreB) {
+            console.log("New score: " + scoreA + ":" + scoreB);
+            pong.updateScores(scoreA, scoreB);
         }
+
+        $.connection.hub.start().done(function () {
+            var me = setInterval(function () {
+                if (document.readyState === 'complete') {
+                    clearInterval(me);
+                    chat.client.assignId = function (currentId) {
+                        console.log("My Id: " + currentId);
+                        myId = currentId;
+                    }
+                    pong.ball(chat.server.sendMove, chat.server.sendScores);
+                }
+            });
+        });
     });
 </script>
 

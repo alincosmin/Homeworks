@@ -42,6 +42,16 @@
   <ItemGroup>
     <DiagnosticsConfiguration Include="WebPingPongContent\diagnostics.wadcfgx" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebPingPong\WebPingPong.csproj">
+      <Name>WebPingPong</Name>
+      <Project>{62a21471-ca90-4e54-94c9-8289cc20d3fe}</Project>
+      <Private>True</Private>
+      <RoleType>Web</RoleType>
+      <RoleName>WebPingPong</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+  </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>

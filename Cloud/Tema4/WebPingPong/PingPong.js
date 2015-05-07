@@ -1,5 +1,33 @@
 ﻿var PingPong = {
-    ball: function () {
+    main: { width: 1350, height: 630 },
+
+    info: {
+         positions: {
+             playerOne: { x: 50, y: 50 }, 
+             playerTwo: { x: 1300, y: 50 }
+         }, 
+         scores: {
+             playerOne: 0,
+             playerTwo: 0
+         }
+    },
+
+    updateScores: function (scoreA, scoreB) {
+        var self = this;
+        self.info.scores.playerOne = scoreA;
+        self.info.scores.playerTwo = scoreB;
+    },
+
+    movePlayers: function(ax, ay, bx, by) {
+        var self = this;
+        self.info.positions.playerOne.x = ax;
+        self.info.positions.playerOne.y = ay;
+        self.info.positions.playerTwo.x = bx;
+        self.info.positions.playerTwo.y = by;
+    },
+
+    ball: function (sendMove, sendScores) {
+        var self = this;
         var canvas = document.getElementById('canvas'),
             ctx,
             x = 65, /* Starting Xposition */
@@ -10,21 +38,15 @@
             dty = 20,
             impact,
             flag = 0,
-            scores = { playerOneScore: 0, playerTwoScore: 0 },
             aKey = true,
             keys = [],
-            WIDTH = 1350,
-            HEIGHT = 630,
-            pox = 50,
-            poy = 50,
-            ptx = WIDTH - 50,
             pty = 50,
             a,
             c = 0,
             lastKey = 0;
 
-        canvas.setAttribute('width', WIDTH);
-        canvas.setAttribute('height', HEIGHT);
+        canvas.setAttribute('width', self.main.width);
+        canvas.setAttribute('height', self.main.height);
 
         function circle(x, y, r) {
             ctx.beginPath();
@@ -55,7 +77,7 @@
 
         function p1Score(ox, oy) {
             ctx.font = '100px Arial';
-            ctx.strokeText(scores.playerOneScore, ox, oy);
+            ctx.strokeText(self.info.scores.playerOne, ox, oy);
         }
 
         function p2Rect(ptx, pty, pow, poh) {
@@ -67,11 +89,11 @@
 
         function p2Score(tx, ty) {
             ctx.font = '100px Arial';
-            ctx.strokeText(scores.playerTwoScore, tx, ty);
+            ctx.strokeText(self.info.scores.playerTwo, tx, ty);
         }
 
         function clear() {
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            ctx.clearRect(0, 0, self.main.width, self.main.height);
         }
 
         onKeyDown = onKeyUp = function (event) {
@@ -86,12 +108,12 @@
                 if (lastKey >= 0) lastKey++;
                 else lastKey = 0;
 
-                if (poy - doy > -15) {
+                if (self.info.positions.playerOne.y - doy > -15) {
                     if (flag == 0 && x == 65) {
-                        poy -= doy + lastKey;
+                        self.info.positions.playerOne.y -= doy + lastKey;
                         y -= doy + lastKey;
                     } else {
-                        poy -= doy + lastKey;
+                        self.info.positions.playerOne.y -= doy + lastKey;
                     }
                 }
             }
@@ -99,34 +121,18 @@
                 if (lastKey <= 0) lastKey--;
                 else lastKey = 0;
 
-                if (poy + doy < HEIGHT - 105) {
+                if (self.info.positions.playerOne.y + doy < self.main.height - 105) {
                     if (flag == 0 && x == 65) {
-                        poy += doy - lastKey;
+                        self.info.positions.playerOne.y += doy - lastKey;
                         y += doy - lastKey;
                     }
                     else {
-                        poy += doy - lastKey;
+                        self.info.positions.playerOne.y += doy - lastKey;
                     }
                 }
             }
-        }
 
-        function checkCollision() {
-            var id = ctx.getImageData(x, y, 12, 12),
-                px = id.data;
-            for (var i = 0; i < px.length; i += 4) {
-                if (px[i + 1] == 58) {
-                    c = 1;
-                    if (x < (WIDTH / 2)) {
-                        impact = y - poy;
-                        calibrateAngle(impact);
-                    }
-                    else {
-                        impact = y - pty;
-                        calibrateAngle(impact);
-                    }
-                }
-            }
+            sendMove(0, self.info.positions.playerOne.x, self.info.positions.playerOne.y);
         }
 
         function calibrateAngle(impact) {
@@ -171,6 +177,24 @@
             }
         }
 
+        function checkCollision() {
+            var id = ctx.getImageData(x, y, 12, 12),
+                px = id.data;
+            for (var i = 0; i < px.length; i += 4) {
+                if (px[i + 1] == 58) {
+                    c = 1;
+                    if (x < (self.main.width / 2)) {
+                        impact = y - poy;
+                        calibrateAngle(impact);
+                    }
+                    else {
+                        impact = y - pty;
+                        calibrateAngle(impact);
+                    }
+                }
+            }
+        }
+
         function init() {
             ctx = canvas.getContext("2d");
             return setInterval(draw, 15);
@@ -178,38 +202,40 @@
 
         function addScore() {
             /* End point if off the edge of screen */
-            if (x + dx > WIDTH) {
-                scores.playerOneScore++;
+            if (x + dx > self.main.width) {
                 flag = 0;
-                pox = 50;
-                poy = 50;
+                self.info.positions.playerOne.x = 50;
+                self.info.positions.playerOne.y = 50;
                 x = 65; /* Starting Xposition */
                 y = 110; /* Starting Yposition */
                 dy = 0;
+
+                sendScores(self.info.scores.playerOne + 1, self.info.scores.playerTwo);
             }
             if (x + dx < 0) {
-                scores.playerTwoScore++;
                 flag = 0;
-                ptx = WIDTH - 50;
-                pty = 50;
-                x = WIDTH - 61; /* Starting Xposition */
+                self.info.positions.playerTwo.x = self.main.width - 50;
+                self.info.positions.playerTwo.y = 50;
+                x = self.main.width - 61; /* Starting Xposition */
                 y = 110; /* Starting Yposition */
                 dy = 0;
                 dx = -dx;
+
+                sendScores(self.info.scores.playerOne, self.info.scores.playerTwo + 1);
             }
         }
 
         function draw() {
             clear();
             ctx.fillStyle = '#eee';
-            rect(0, 0, WIDTH, HEIGHT);
+            rect(0, 0, self.main.width, self.main.height);
             ctx.fillStyle = 'rgba(114,58,58,1)';
             ctx.strokeStyle = 'rgba(120,88,88,1)';
-            p1Rect(pox, poy, 4, 120);
-            p2Rect(ptx, pty, 4, 120);
+            p1Rect(self.info.positions.playerOne.x, self.info.positions.playerOne.y, 4, 120);
+            p2Rect(self.info.positions.playerTwo.x, self.info.positions.playerTwo.y, 4, 120);
             ctx.strokeStyle = '#fff';
-            p1Score((WIDTH / 4) - 30, HEIGHT / 2);
-            p2Score(((WIDTH / 4) * 3) - 50, HEIGHT / 2);
+            p1Score((self.main.width / 4) - 30, self.main.height / 2);
+            p2Score(((self.main.width / 4) * 3) - 50, self.main.height / 2);
             a == 1 ? ctx.fillStyle = "#444444" : ctx.fillStyle = "#b3b3b3";
             circle(x, y, 10);
 
@@ -226,7 +252,7 @@
                 x += dx; y += dy;
             }
 
-            if (y + dy > HEIGHT || y + dy < 0) {
+            if (y + dy > self.main.height || y + dy < 0) {
                 dy = -dy;
             }
         }
