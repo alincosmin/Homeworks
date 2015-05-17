@@ -2,20 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Tema5
 {
     public class RareMatrix
     {
-        private List<RareMatrixNode>[] _matrix; 
+        private readonly int _fillDegree = 10;
+        private readonly List<RareMatrixNode>[] _matrix;
+        private readonly double _precision = Math.Pow(10, -15);
 
-        public static double Precision
+        public RareMatrix(int size, int fillDegree)
         {
-            get { return Math.Pow(10, -5); }
+            _matrix = new List<RareMatrixNode>[size];
+            _fillDegree = fillDegree;
         }
 
-        public RareMatrix(StreamReader reader)
+        public RareMatrix(StreamReader reader, int fillDegree = 10)
         {
+            _fillDegree = fillDegree;
             var line = reader.ReadLine();
             long size;
             if (!Int64.TryParse(line, out size))
@@ -47,6 +52,7 @@ namespace Tema5
                 }
             }
 
+            CheckFillDegree();
             SortMatrix();
 
             foreach (var nodeList in _matrix.Where(x => x != null))
@@ -63,6 +69,14 @@ namespace Tema5
 
                     index = nodeList[i].ColumnIndex;
                 }
+            }
+        }
+
+        private void CheckFillDegree()
+        {
+            if (_matrix.Where(x => x != null).Any(nodeList => nodeList.Count(x => x.Value != 0) > _fillDegree))
+            {
+                throw new InvalidDataException("Too many values");
             }
         }
 
@@ -108,10 +122,10 @@ namespace Tema5
                     }
 
                     iterations++; 
-                } while (delta >= Precision && iterations <= maxIterations && delta <= Math.Pow(10, 8));
+                } while (delta >= _precision && iterations <= maxIterations && delta <= Math.Pow(10, 8));
             }
 
-            if (delta < Precision)
+            if (delta < _precision)
                 return result;
             else
             {
@@ -139,26 +153,6 @@ namespace Tema5
             return result;
         }
 
-        public double[] Multiply(double[] array)
-        {
-            if (array == null || array.Length != _matrix.Length) return null;
-            var result = new double[_matrix.Length];
-
-            for (var i = 0; i < _matrix.Length; i++)
-            {
-                if (_matrix[i] == null)
-                {
-                    result[i] = 0;
-                }
-                else
-                {
-                    result[i] = _matrix[i].Sum(node => node.Value*array[node.ColumnIndex]);
-                }
-            }
-
-            return result;
-        }
-
         public static double ComputeNorm(double[] firstArray, double[] secondArray)
         {
             double result;
@@ -173,6 +167,133 @@ namespace Tema5
             }
 
             return result;
+        }
+
+        public string NiceToString()
+        {
+            var builder = new StringBuilder();
+            var index = 0;
+            foreach (var nodeList in _matrix)
+            {
+                builder.Append(string.Format("A[{0}] = ", index));
+
+                var elements = nodeList.Select(x => string.Format("({0}, {1})", x.Value, x.ColumnIndex)).ToArray();
+                builder.Append("{" + string.Join(", ", elements) + "}");
+
+                index++;
+                builder.AppendLine();
+            }
+
+            return builder.ToString();
+        }
+
+        public void ExportToFile(string filename)
+        {
+            using (var writer = new StreamWriter(filename))
+            {
+                writer.WriteLine(_matrix.Count());
+                writer.WriteLine();
+
+                var index = 0;
+                foreach (var nodeList in _matrix)
+                {
+                    nodeList.Select(x => string.Format("{0}, {1}, {2}", x.Value, index, x.ColumnIndex))
+                        .ToList()
+                        .ForEach(x => writer.WriteLine(x));
+
+                    index++;
+                }
+            }
+        }
+
+        public static RareMatrix GenerateSymetric(int size, int fillDegree)
+        {
+            RareMatrix matrix = null;
+            int trials = 3;
+            
+            while (trials-- > 0)
+            {
+                try
+                {
+                    matrix = new RareMatrix(size, fillDegree);
+                    var random = new Random(DateTime.Now.Millisecond);
+                    int line, column;
+                    double value;
+
+                    for (var i = 0; i < size*size; i++)
+                    {
+                        line = random.Next(3*size);
+                        column = random.Next(3*size);
+
+                        if (line >= size || column >= size) continue;
+
+                        value = random.NextDouble()*size*2;
+
+                        if (matrix._matrix[line] == null)
+                        {
+                            matrix._matrix[line] = new List<RareMatrixNode>();
+                        }
+                        matrix._matrix[line].Add(new RareMatrixNode()
+                        {
+                            Value = value,
+                            ColumnIndex = column
+                        });
+
+                        if (line == column) continue;
+
+                        if (matrix._matrix[column] == null)
+                        {
+                            matrix._matrix[column] = new List<RareMatrixNode>();
+                        }
+                        matrix._matrix[column].Add(new RareMatrixNode()
+                        {
+                            Value = value,
+                            ColumnIndex = line
+                        });
+                    }
+                    matrix.CheckFillDegree();
+                    break;
+                }
+                catch (InvalidDataException) { }
+            }
+
+            return matrix;
+        }
+
+        public RareMatrix SumWith(RareMatrix matrix)
+        {
+            if(_matrix.Count() != matrix._matrix.Count())
+                return null;
+
+            var result = new RareMatrix(_matrix.Count(), 16);
+
+
+            return result;
+        }
+
+        public double[] Multiply(double[] array)
+        {
+            if (array == null || array.Length != _matrix.Length) return null;
+            var result = new double[_matrix.Length];
+
+            for (var i = 0; i < _matrix.Length; i++)
+            {
+                if (_matrix[i] == null)
+                {
+                    result[i] = 0;
+                }
+                else
+                {
+                    result[i] = _matrix[i].Sum(node => node.Value * array[node.ColumnIndex]);
+                }
+            }
+
+            return result;
+        }
+
+        public RareMatrix MultiplyWith(RareMatrix matrix)
+        {
+            return null;
         }
     }
 }

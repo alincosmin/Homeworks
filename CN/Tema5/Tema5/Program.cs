@@ -9,27 +9,89 @@ namespace Tema5
     {
         static void Main(string[] args)
         {
-            var files = new []
+            Console.WriteLine("Demo Tema 4:");
+            Console.WriteLine("------------");
+            DemoTema4();
+
+            Console.WriteLine();
+
+            //Console.WriteLine("Demo Tema 5:");
+            //Console.WriteLine("------------");
+            //DemoTema5();
+        }
+
+        private static void DemoTema4()
+        {
+            var generatedMatrix = RareMatrix.GenerateSymetric(50, 15);
+            if (generatedMatrix != null)
             {
-                "m_rar_2015_1.txt",
-                "m_rar_2015_2.txt",
-                "m_rar_2015_3.txt",
-                "m_rar_2015_4.txt"
+                generatedMatrix.ExportToFile("simetrica.txt");
+                Console.WriteLine("--- Matricea a fost generata si exportata");
+            }
+            else
+            {
+                Console.WriteLine("--- Nu s-a putut genera matricea");
+            }
+
+            var files = new[]
+            {
+                "input_4/test.txt",
+                //"input_4/m_rar_2015_1.txt",
+                //"input_4/m_rar_2015_2.txt",
+                //"input_4/m_rar_2015_3.txt"
             };
 
             foreach (var path in files)
             {
                 Console.WriteLine("Fisierul: {0}", path);
-                var matrix = new RareMatrix(new StreamReader(path));
-                var array = ReadArray(new StreamReader(path));
-                Console.WriteLine("--- {0} elemente", array.Length);
 
-                var result = matrix.SolveGaussSeidell(array);
-                Console.WriteLine("--- {0} elemente in rezultat Gauss-Seidell", result.Length);
+                try
+                {
+                    var matrix = new RareMatrix(new StreamReader(path));
+                    var array = ReadArray(new StreamReader(path));
+                    Console.WriteLine("--- {0} elemente", array.Length);
+                    Console.WriteLine(matrix.NiceToString());
+                }
+                catch (InvalidDataException ex)
+                {
+                    Console.WriteLine("Eroare: {0}", ex.Message);
+                }
 
-                var prod = matrix.Multiply(array);
-                var norm = RareMatrix.ComputeNorm(prod, result);
-                Console.WriteLine("--- Norma ||AxGS - b||: {0}", norm);
+                Console.WriteLine();
+            }
+        }
+
+        private static void DemoTema5()
+        {
+            var files = new[]
+            {
+                "input_5/m_rar_2015_1.txt",
+                "input_5/m_rar_2015_2.txt",
+                "input_5/m_rar_2015_3.txt",
+                "input_5/m_rar_2015_4.txt"
+            };
+
+            foreach (var path in files)
+            {
+                Console.WriteLine("Fisierul: {0}", path);
+
+                try
+                {
+                    var matrix = new RareMatrix(new StreamReader(path));
+                    var array = ReadArray(new StreamReader(path));
+                    Console.WriteLine("--- {0} elemente", array.Length);
+
+                    var result = matrix.SolveGaussSeidell(array);
+                    Console.WriteLine("--- {0} elemente in rezultat Gauss-Seidell", result.Length);
+
+                    var prod = matrix.Multiply(array);
+                    var norm = RareMatrix.ComputeNorm(prod, result);
+                    Console.WriteLine("--- Norma ||AxGS - b||: {0}", norm);
+                }
+                catch (InvalidDataException ex)
+                {
+                    Console.WriteLine("Eroare: {0}", ex.Message);
+                }
 
                 Console.WriteLine();
             }

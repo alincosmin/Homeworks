@@ -1,4 +1,6 @@
-﻿namespace Tema3
+﻿using MathNet.Numerics.LinearAlgebra.Double.Solvers;
+
+namespace Tema3
 {
     public class QRDecomposer
     {
