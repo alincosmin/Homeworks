@@ -226,13 +226,11 @@ namespace Tema5
                         column = random.Next(3*size);
 
                         if (line >= size || column >= size) continue;
+                        if (matrix._matrix[line] != null && matrix._matrix[line].Any(x => x.ColumnIndex == column)) continue;
 
                         value = random.NextDouble()*size*2;
 
-                        if (matrix._matrix[line] == null)
-                        {
-                            matrix._matrix[line] = new List<RareMatrixNode>();
-                        }
+                        matrix._matrix[line] = matrix._matrix[line] ?? new List<RareMatrixNode>();
                         matrix._matrix[line].Add(new RareMatrixNode()
                         {
                             Value = value,
@@ -241,10 +239,7 @@ namespace Tema5
 
                         if (line == column) continue;
 
-                        if (matrix._matrix[column] == null)
-                        {
-                            matrix._matrix[column] = new List<RareMatrixNode>();
-                        }
+                        matrix._matrix[column] = matrix._matrix[column] ?? new List<RareMatrixNode>();
                         matrix._matrix[column].Add(new RareMatrixNode()
                         {
                             Value = value,
@@ -267,6 +262,46 @@ namespace Tema5
 
             var result = new RareMatrix(_matrix.Count(), 16);
 
+            for (var line = 0; line < _matrix.Count(); line++)
+            {
+                if(_matrix[line] == null && matrix._matrix[line] == null)
+                   continue;
+
+                if (_matrix[line] == null)
+                {
+                    result._matrix[line] = matrix._matrix[line];
+                }
+                else if (matrix._matrix[line] == null)
+                {
+                    result._matrix[line] = _matrix[line];
+                }
+                else
+                {
+                    result._matrix[line] = result._matrix[line] ?? new List<RareMatrixNode>();
+                    var min = Math.Min(_matrix[line].Count, matrix._matrix.Count());
+                    
+                    for (var i = 0; i < min; i++)
+                    {
+                        if(_matrix[line][i] == null || matrix._matrix[line][i] == null)
+                            continue;
+
+                        var first = _matrix[line][i];
+                        var second = matrix._matrix[line][i];
+
+                        if (first.ColumnIndex == second.ColumnIndex)
+                        {
+                            result._matrix[line].Add(RareMatrixNode.Add(first, second));
+                        }
+                        else
+                        {
+                            var node = first.ColumnIndex < second.ColumnIndex ? first : second;
+                            result._matrix[line].Add(node);
+                        }
+                    }
+                }
+            }
+
+            result.CheckFillDegree();
 
             return result;
         }
@@ -293,7 +328,49 @@ namespace Tema5
 
         public RareMatrix MultiplyWith(RareMatrix matrix)
         {
-            return null;
+            if (_matrix.Count() != matrix._matrix.Count())
+                return null;
+
+            var result = new RareMatrix(_matrix.Count(), 0);
+
+            for (var lineA = 0; lineA < _matrix.Count(); lineA++)
+            {
+                for (var col = 0; col < _matrix.Count(); col++)
+                {
+                    double value = 0;
+
+                    for (var i = 0; i < _matrix.Count(); i++)
+                    {
+                        double lineFactor = 0, colFactor = 0;
+
+                        if (_matrix[lineA] != null)
+                        {
+                            var el = _matrix[lineA].FirstOrDefault(x => x.ColumnIndex == i);
+                            lineFactor = el != null ? el.Value : 0;
+                        }
+
+                        if (matrix._matrix[i] != null)
+                        {
+                            var el = matrix._matrix[i].FirstOrDefault(x => x.ColumnIndex == col);
+                            colFactor = el != null ? el.Value : 0;
+                        }
+
+                        value += lineFactor*colFactor;
+                    }
+
+                    if (value != 0)
+                    {
+                        result._matrix[lineA] = result._matrix[lineA] ?? new List<RareMatrixNode>();
+                        result._matrix[lineA].Add(new RareMatrixNode()
+                        {
+                            Value = value,
+                            ColumnIndex = col
+                        });
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

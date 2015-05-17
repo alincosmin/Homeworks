@@ -15,9 +15,9 @@ namespace Tema5
 
             Console.WriteLine();
 
-            //Console.WriteLine("Demo Tema 5:");
-            //Console.WriteLine("------------");
-            //DemoTema5();
+            Console.WriteLine("Demo Tema 5:");
+            Console.WriteLine("------------");
+            DemoTema5();
         }
 
         private static void DemoTema4()
@@ -35,11 +35,13 @@ namespace Tema5
 
             var files = new[]
             {
-                "input_4/test.txt",
-                //"input_4/m_rar_2015_1.txt",
-                //"input_4/m_rar_2015_2.txt",
-                //"input_4/m_rar_2015_3.txt"
+                "input_4/m_rar_2015_1.txt",
+                "input_4/m_rar_2015_2.txt",
+                "input_4/m_rar_2015_3.txt"
             };
+
+            var matrices = new List<RareMatrix>();
+            var arrays = new List<double[]>();
 
             foreach (var path in files)
             {
@@ -50,7 +52,9 @@ namespace Tema5
                     var matrix = new RareMatrix(new StreamReader(path));
                     var array = ReadArray(new StreamReader(path));
                     Console.WriteLine("--- {0} elemente", array.Length);
-                    Console.WriteLine(matrix.NiceToString());
+
+                    matrices.Add(matrix);
+                    arrays.Add(array);
                 }
                 catch (InvalidDataException ex)
                 {
@@ -58,6 +62,36 @@ namespace Tema5
                 }
 
                 Console.WriteLine();
+            }
+
+            try
+            {
+                var sum = matrices[0].SumWith(matrices[1]);
+                Console.WriteLine("M0 + M1: OK");
+            }
+            catch (InvalidDataException ex)
+            {
+                Console.WriteLine("M0 + M1: Eroare: {0}", ex.Message);
+            }
+
+            try
+            {
+                var arrayProduct = matrices[1].Multiply(arrays[1]);
+                Console.WriteLine("M1 + A1: OK");
+            }
+            catch (InvalidDataException ex)
+            {
+                Console.WriteLine("M1 + A1: Eroare: {0}", ex.Message);
+            }
+
+            try
+            {
+                var matricesProduct = matrices[1].MultiplyWith(matrices[2]);
+                Console.WriteLine("M1 + M2: OK");
+            }
+            catch (InvalidDataException ex)
+            {
+                Console.WriteLine("M1 + M2: Eroare: {0}", ex.Message);
             }
         }
 
