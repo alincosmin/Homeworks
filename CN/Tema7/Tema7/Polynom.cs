@@ -64,7 +64,14 @@ namespace Tema7
 
         public double ComputeValue(double x)
         {
-            return Coefficients.Select((c, i) => c*Math.Pow(x, i)).Sum();
+            var b = Coefficients.Last();
+
+            for (var i = Coefficients.Count - 2; i >= 0; i--)
+            {
+                b = Coefficients[i] + b*x;
+            }
+
+            return b;
         }
 
         public int Sign(double val)
