@@ -132,19 +132,25 @@ namespace Tema7
         {
             var solutions = new List<double>();
 
-            int iterations = 1000;
-            while (iterations-- > 0)
+            double sol = 0;
+            do
             {
                 try
                 {
-                    var sol = LaguerreComputation();
+                    var sol2 = LaguerreComputation();
+                    if(Math.Abs(sol2 - sol) < Precision)
+                        break;
+
+                    sol = sol2;
+
                     if (solutions.All(x => Math.Abs(x - sol) > Precision))
                     {
                         solutions.Add(sol);
                     }
                 }
-                catch (InvalidDataException) { }
-            }
+                catch (InvalidDataException){}
+
+            } while (true);
 
             return solutions.ToArray();
         }
