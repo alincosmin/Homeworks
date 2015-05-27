@@ -117,9 +117,10 @@ namespace Tema5
 
                     var result = matrix.SolveGaussSeidell(array);
                     Console.WriteLine("--- {0} elemente in rezultat Gauss-Seidell", result.Length);
+                    //Console.WriteLine(string.Join(", ", result));
 
-                    var prod = matrix.Multiply(array);
-                    var norm = RareMatrix.ComputeNorm(prod, result);
+                    var prod = matrix.Multiply(result);
+                    var norm = RareMatrix.ComputeNorm(prod, array);
                     Console.WriteLine("--- Norma ||AxGS - b||: {0}", norm);
                 }
                 catch (InvalidDataException ex)
